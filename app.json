@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "app",
-    "slug": "app",
+    "name": "Ruck & Run",
+    "slug": "simple-run",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -12,7 +12,13 @@
       "backgroundColor": "#ffffff"
     },
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": false,
+      "infoPlist": {
+        "NSLocationWhenInUseUsageDescription": "Simple Run uses your location to track your route while you run.",
+        "NSLocationAlwaysAndWhenInUseUsageDescription": "Simple Run uses your location to track your route in the background.",
+        "ITSAppUsesNonExemptEncryption": false
+      },
+      "bundleIdentifier": "com.jwatsondev.simplerun"
     },
     "android": {
       "adaptiveIcon": {
@@ -24,6 +30,21 @@
     },
     "web": {
       "favicon": "./assets/favicon.png"
-    }
+    },
+    "extra": {
+      "eas": {
+        "projectId": "20c0cb77-966b-4d0d-8fb4-d278a589eabf"
+      }
+    },
+    "plugins": [
+      [
+        "react-native-health",
+        {
+          "healthSharePermission": "Ruck & Run reads your health data to display workout information.",
+          "healthUpdatePermission": "Ruck & Run saves your workouts to Apple Health."
+        }
+      ]
+    ],
+    "newArchEnabled": false
   }
 }
