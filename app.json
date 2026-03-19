@@ -43,7 +43,23 @@
           "healthSharePermission": "Ruck & Run reads your health data to display workout information.",
           "healthUpdatePermission": "Ruck & Run saves your workouts to Apple Health."
         }
-      ]
+      ],
+      [
+        "expo-location",
+        {
+          "locationAlwaysAndWhenInUsePermission": "Ruck & Run uses your location to track your route, including in the background when your screen is locked.",
+          "isIosBackgroundLocationEnabled": true,
+          "isAndroidBackgroundLocationEnabled": true
+        }
+      ],
+      [
+        "expo-notifications",
+        {
+          "icon": "./assets/icon.png",
+          "color": "#111111"
+        }
+      ],
+      "expo-sharing"
     ],
     "newArchEnabled": false
   }

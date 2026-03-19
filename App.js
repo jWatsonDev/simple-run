@@ -2,6 +2,10 @@ import { useState, useEffect, useRef } from 'react';
 import { StyleSheet, Text, View, TouchableOpacity, SafeAreaView, FlatList, Alert, TextInput, KeyboardAvoidingView, Platform } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 import * as Location from 'expo-location';
+import * as TaskManager from 'expo-task-manager';
+import * as Notifications from 'expo-notifications';
+import * as Sharing from 'expo-sharing';
+import { captureRef } from 'react-native-view-shot';
 import MapView, { Polyline } from 'react-native-maps';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 let AppleHealthKit = null;
@@ -10,6 +14,9 @@ try { AppleHealthKit = require('react-native-health').default; } catch (_) {}
 const HK_ACTIVITY = { Run: 'Running', Walk: 'Walking', Ruck: 'Hiking' };
 
 const STORAGE_KEY = 'simple_run_history';
+const RUN_STATE_KEY = 'simple_run_active';
+const LOCATION_TASK = 'background-location';
+const NOTIFICATION_ID = 'run-active';
 const ACTIVITY_TYPES = ['Run', 'Ruck', 'Walk'];
 const PERCEIVED = [
   { label: 'Easy', value: 2 },
@@ -53,7 +60,7 @@ function formatDistance(meters) {
 }
 
 function formatElevation(meters) {
-  return Math.round(meters * 3.28084); // to feet
+  return Math.round(meters * 3.28084);
 }
 
 function activityLabel(type, ruckWeight) {
@@ -63,47 +70,167 @@ function activityLabel(type, ruckWeight) {
 
 function calcEffortScore(perceivedValue, distance, elapsed, elevGain, ruckWeight) {
   let score = perceivedValue;
-
-  // Pace bonus/penalty (minutes per mile)
   if (distance > 10 && elapsed > 0) {
     const miles = distance / 1609.34;
     const pace = elapsed / 60 / miles;
     if (pace < 9) score += 1;
     else if (pace > 14) score -= 1;
   }
-
-  // Elevation bonus (+1 per 200ft gain)
   const elevFt = elevGain * 3.28084;
   score += Math.floor(elevFt / 200);
-
-  // Ruck weight bonus (+1 per 20 lbs)
   if (ruckWeight) score += Math.floor(parseFloat(ruckWeight) / 20);
-
   return Math.min(10, Math.max(1, Math.round(score)));
+}
+
+// --- Notification ---
+
+Notifications.setNotificationHandler({
+  handleNotification: async () => ({
+    shouldShowAlert: false,
+    shouldPlaySound: false,
+    shouldSetBadge: false,
+  }),
+});
+
+async function updateNotification(distance, elapsed) {
+  try {
+    await Notifications.dismissNotificationAsync(NOTIFICATION_ID).catch(() => {});
+    await Notifications.scheduleNotificationAsync({
+      identifier: NOTIFICATION_ID,
+      content: {
+        title: 'Ruck & Run · Active',
+        body: `${formatDistance(distance)} mi · ${formatTime(elapsed)} · ${formatPace(distance, elapsed)} /mi`,
+      },
+      trigger: null,
+    });
+  } catch (_) {}
+}
+
+// --- Background location task ---
+
+TaskManager.defineTask(LOCATION_TASK, async ({ data, error }) => {
+  if (error) { console.log('[BG] location error:', error.message); return; }
+  if (!data?.locations?.length) return;
+
+  try {
+    const raw = await AsyncStorage.getItem(RUN_STATE_KEY);
+    if (!raw) return;
+    const state = JSON.parse(raw);
+
+    for (const loc of data.locations) {
+      const point = { latitude: loc.coords.latitude, longitude: loc.coords.longitude };
+      if (state.coords.length > 0) {
+        state.distance += haversineDistance(state.coords[state.coords.length - 1], point);
+      }
+      state.coords.push(point);
+      const alt = loc.coords.altitude;
+      if (alt != null) {
+        if (state.lastAlt != null && alt > state.lastAlt + 0.5) {
+          state.elevGain += alt - state.lastAlt;
+        }
+        state.lastAlt = alt;
+      }
+    }
+
+    await AsyncStorage.setItem(RUN_STATE_KEY, JSON.stringify(state));
+
+    const elapsed = Math.floor((Date.now() - state.startTime) / 1000);
+    await updateNotification(state.distance, elapsed);
+  } catch (e) {
+    console.log('[BG] task error:', e);
+  }
+});
+
+// --- Share Card ---
+
+function ShareCard({ run, cardRef }) {
+  const coords = run?.coords ?? [];
+  const region = coords.length > 0 ? {
+    latitude: coords.reduce((s, c) => s + c.latitude, 0) / coords.length,
+    longitude: coords.reduce((s, c) => s + c.longitude, 0) / coords.length,
+    latitudeDelta: 0.02,
+    longitudeDelta: 0.02,
+  } : { latitude: 37.78825, longitude: -122.4324, latitudeDelta: 0.02, longitudeDelta: 0.02 };
+
+  return (
+    <View ref={cardRef} style={shareStyles.card} collapsable={false}>
+      <View style={shareStyles.topBar} />
+      <MapView
+        style={shareStyles.map}
+        region={region}
+        scrollEnabled={false}
+        zoomEnabled={false}
+        rotateEnabled={false}
+        pitchEnabled={false}
+        liteMode
+      >
+        {coords.length > 1 && <Polyline coordinates={coords} strokeColor="#fff" strokeWidth={4} />}
+      </MapView>
+      <View style={shareStyles.statsBlock}>
+        <View style={shareStyles.statRow}>
+          <View style={shareStyles.stat}>
+            <Text style={shareStyles.statValue}>{formatDistance(run?.distance ?? 0)}</Text>
+            <Text style={shareStyles.statLabel}>Miles</Text>
+          </View>
+          <View style={shareStyles.stat}>
+            <Text style={shareStyles.statValue}>{formatTime(run?.elapsed ?? 0)}</Text>
+            <Text style={shareStyles.statLabel}>Time</Text>
+          </View>
+          <View style={shareStyles.stat}>
+            <Text style={shareStyles.statValue}>{formatPace(run?.distance ?? 0, run?.elapsed ?? 0)}</Text>
+            <Text style={shareStyles.statLabel}>Pace /mi</Text>
+          </View>
+          {run?.effortScore != null && (
+            <View style={shareStyles.stat}>
+              <Text style={shareStyles.statValue}>{run.effortScore}/10</Text>
+              <Text style={shareStyles.statLabel}>Effort</Text>
+            </View>
+          )}
+        </View>
+        <View style={shareStyles.divider} />
+        <View style={shareStyles.footer}>
+          <Text style={shareStyles.appName}>Ruck & Run</Text>
+          <Text style={shareStyles.brand}>A DadHabit.dad app</Text>
+        </View>
+      </View>
+      <View style={shareStyles.bottomBar} />
+    </View>
+  );
 }
 
 // --- Screens ---
 
 function RunScreen({ onViewHistory }) {
-  const [status, setStatus] = useState('idle'); // idle | running | rating | done
+  const [status, setStatus] = useState('idle');
   const [activity, setActivity] = useState('Run');
   const [ruckWeight, setRuckWeight] = useState('');
   const [coords, setCoords] = useState([]);
   const [distance, setDistance] = useState(0);
   const [elapsed, setElapsed] = useState(0);
   const [elevGain, setElevGain] = useState(0);
-  const [lastAlt, setLastAlt] = useState(null);
   const [runs, setRuns] = useState([]);
   const [pendingRun, setPendingRun] = useState(null);
 
-  const locationSub = useRef(null);
   const timerRef = useRef(null);
   const mapRef = useRef(null);
   const startTimeRef = useRef(null);
+  const shareCardRef = useRef(null);
 
   useEffect(() => {
     loadRuns();
     centerOnUser();
+    // Resume if a run was already in progress (e.g. app crash/restart)
+    Location.hasStartedLocationUpdatesAsync(LOCATION_TASK).then((active) => {
+      if (active) {
+        setStatus('running');
+        AsyncStorage.getItem(RUN_STATE_KEY).then((raw) => {
+          if (!raw) return;
+          const state = JSON.parse(raw);
+          startTimeRef.current = state.startTime;
+          startSyncTimer();
+        });
+      }
+    }).catch(() => {});
     try {
       AppleHealthKit?.initHealthKit({
         permissions: {
@@ -112,8 +239,27 @@ function RunScreen({ onViewHistory }) {
         },
       }, () => {});
     } catch (_) {}
-    return () => stopTracking();
+    return () => {
+      clearInterval(timerRef.current);
+    };
   }, []);
+
+  function startSyncTimer() {
+    clearInterval(timerRef.current);
+    timerRef.current = setInterval(async () => {
+      const raw = await AsyncStorage.getItem(RUN_STATE_KEY);
+      if (!raw) return;
+      const state = JSON.parse(raw);
+      setCoords([...state.coords]);
+      setDistance(state.distance);
+      setElevGain(state.elevGain);
+      setElapsed(Math.floor((Date.now() - state.startTime) / 1000));
+      if (state.coords.length > 0) {
+        const last = state.coords[state.coords.length - 1];
+        mapRef.current?.animateCamera({ center: last, zoom: 17 }, { duration: 500 });
+      }
+    }, 1000);
+  }
 
   async function centerOnUser() {
     const { status } = await Location.requestForegroundPermissionsAsync();
@@ -143,75 +289,79 @@ function RunScreen({ onViewHistory }) {
       Alert.alert('Pack Weight Required', 'Enter your pack weight in lbs to start a ruck.');
       return;
     }
-    const { status: permStatus } = await Location.requestForegroundPermissionsAsync();
-    if (permStatus !== 'granted') {
+    const { status: fgStatus } = await Location.requestForegroundPermissionsAsync();
+    if (fgStatus !== 'granted') {
       Alert.alert('Location Required', 'Enable location access to track your activity.');
       return;
     }
+    // Request background permission — best effort, don't block if denied
+    await Location.requestBackgroundPermissionsAsync().catch(() => {});
+    await Notifications.requestPermissionsAsync().catch(() => {});
+
+    const startTime = Date.now();
+    startTimeRef.current = startTime;
+
+    await AsyncStorage.setItem(RUN_STATE_KEY, JSON.stringify({
+      coords: [],
+      distance: 0,
+      elevGain: 0,
+      lastAlt: null,
+      startTime,
+      activity,
+      ruckWeight: activity === 'Ruck' ? ruckWeight : null,
+    }));
+
     setCoords([]);
     setDistance(0);
     setElapsed(0);
     setElevGain(0);
-    setLastAlt(null);
     setStatus('running');
-    startTimeRef.current = Date.now();
-    timerRef.current = setInterval(() => {
-      setElapsed(Math.floor((Date.now() - startTimeRef.current) / 1000));
-    }, 1000);
-    locationSub.current = await Location.watchPositionAsync(
-      { accuracy: Location.Accuracy.BestForNavigation, distanceInterval: 5 },
-      (loc) => {
-        const point = { latitude: loc.coords.latitude, longitude: loc.coords.longitude };
-        const alt = loc.coords.altitude;
-        setCoords((prev) => {
-          const next = [...prev, point];
-          if (prev.length > 0) {
-            setDistance((d) => d + haversineDistance(prev[prev.length - 1], point));
-          }
-          mapRef.current?.animateCamera({
-            center: point,
-            heading: loc.coords.heading ?? 0,
-            pitch: 0,
-            zoom: 17,
-          }, { duration: 500 });
-          return next;
-        });
-        if (alt != null) {
-          setLastAlt((prev) => {
-            if (prev != null && alt > prev + 0.5) {
-              setElevGain((g) => g + (alt - prev));
-            }
-            return alt;
-          });
-        }
-      }
-    );
+
+    await Location.startLocationUpdatesAsync(LOCATION_TASK, {
+      accuracy: Location.Accuracy.BestForNavigation,
+      distanceInterval: 5,
+      showsBackgroundLocationIndicator: true, // iOS blue status bar indicator
+      foregroundService: {
+        // Android: required for background location, also shows as notification
+        notificationTitle: 'Ruck & Run',
+        notificationBody: 'Tracking your activity...',
+        notificationColor: '#111111',
+      },
+    });
+
+    await updateNotification(0, 0);
+    startSyncTimer();
   }
 
-  function stopTracking() {
-    locationSub.current?.remove();
-    locationSub.current = null;
+  async function finishRun() {
     clearInterval(timerRef.current);
-  }
+    try {
+      const active = await Location.hasStartedLocationUpdatesAsync(LOCATION_TASK);
+      if (active) await Location.stopLocationUpdatesAsync(LOCATION_TASK);
+    } catch (_) {}
+    await Notifications.dismissAllNotificationsAsync().catch(() => {});
 
-  function finishRun() {
-    stopTracking();
-    if (coords.length > 1) {
-      mapRef.current?.fitToCoordinates(coords, {
+    // Read final state from AsyncStorage (captures any points collected while screen was locked)
+    const raw = await AsyncStorage.getItem(RUN_STATE_KEY);
+    const state = raw ? JSON.parse(raw) : { coords, distance, elevGain, startTime: startTimeRef.current };
+
+    if (state.coords.length > 1) {
+      mapRef.current?.fitToCoordinates(state.coords, {
         edgePadding: { top: 40, right: 40, bottom: 40, left: 40 },
         animated: true,
       });
     }
+
     setPendingRun({
       id: Date.now(),
       date: new Date().toLocaleDateString(),
       activity,
       ruckWeight: activity === 'Ruck' ? ruckWeight : null,
-      distance,
-      elapsed,
-      elevGain,
-      coords,
-      startTime: startTimeRef.current,
+      distance: state.distance,
+      elapsed: Math.floor((Date.now() - state.startTime) / 1000),
+      elevGain: state.elevGain,
+      coords: state.coords,
+      startTime: state.startTime,
       endTime: Date.now(),
     });
     setStatus('rating');
@@ -236,13 +386,21 @@ function RunScreen({ onViewHistory }) {
     setStatus('done');
   }
 
+  async function shareRun() {
+    try {
+      const uri = await captureRef(shareCardRef, { format: 'png', quality: 1 });
+      await Sharing.shareAsync(uri, { mimeType: 'image/png', dialogTitle: 'Share your run' });
+    } catch (e) {
+      console.log('[Share] error:', e);
+    }
+  }
+
   function resetRun() {
     setStatus('idle');
     setCoords([]);
     setDistance(0);
     setElapsed(0);
     setElevGain(0);
-    setLastAlt(null);
     setRuckWeight('');
     setPendingRun(null);
   }
@@ -254,7 +412,6 @@ function RunScreen({ onViewHistory }) {
     longitudeDelta: 0.01,
   };
 
-  // Rating screen
   if (status === 'rating') {
     return (
       <SafeAreaView style={styles.container}>
@@ -359,13 +516,18 @@ function RunScreen({ onViewHistory }) {
           </TouchableOpacity>
         )}
         {status === 'done' && (
-          <View style={styles.row}>
-            <TouchableOpacity style={[styles.btn, styles.btnSecondary]} onPress={resetRun}>
-              <Text style={styles.btnText}>New Activity</Text>
+          <View>
+            <TouchableOpacity style={[styles.btn, styles.btnShare]} onPress={shareRun}>
+              <Text style={styles.btnText}>Share Run</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={[styles.btn, styles.btnPrimary, { flex: 1 }]} onPress={onViewHistory}>
-              <Text style={styles.btnText}>History</Text>
-            </TouchableOpacity>
+            <View style={styles.row}>
+              <TouchableOpacity style={[styles.btn, styles.btnSecondary]} onPress={resetRun}>
+                <Text style={styles.btnText}>New Activity</Text>
+              </TouchableOpacity>
+              <TouchableOpacity style={[styles.btn, styles.btnPrimary, { flex: 1 }]} onPress={onViewHistory}>
+                <Text style={styles.btnText}>History</Text>
+              </TouchableOpacity>
+            </View>
           </View>
         )}
       </View>
@@ -379,6 +541,11 @@ function RunScreen({ onViewHistory }) {
       {status === 'idle' && (
         <Text style={styles.dadhabitFooter}>A DadHabit.dad app</Text>
       )}
+
+      {/* Off-screen share card — captured by view-shot, never visible to user */}
+      <View style={shareStyles.offscreen}>
+        <ShareCard run={pendingRun} cardRef={shareCardRef} />
+      </View>
     </SafeAreaView>
   );
 }
@@ -473,6 +640,7 @@ const styles = StyleSheet.create({
   btn: { borderRadius: 12, paddingVertical: 16, alignItems: 'center', marginVertical: 4 },
   btnPrimary: { backgroundColor: '#111' },
   btnStop: { backgroundColor: '#555' },
+  btnShare: { backgroundColor: '#1a6b3c' },
   btnSecondary: { backgroundColor: '#888', flex: 1, marginRight: 8 },
   btnText: { color: '#fff', fontSize: 18, fontWeight: '700' },
   row: { flexDirection: 'row', alignItems: 'center' },
@@ -496,4 +664,21 @@ const styles = StyleSheet.create({
   ratingSubtitle: { fontSize: 14, color: '#888', textAlign: 'center', marginBottom: 32 },
   ratingBtn: { backgroundColor: '#F2F2F2', borderRadius: 12, paddingVertical: 18, alignItems: 'center', marginBottom: 12 },
   ratingBtnText: { fontSize: 18, fontWeight: '700', color: '#111' },
+});
+
+const shareStyles = StyleSheet.create({
+  offscreen: { position: 'absolute', top: -2000, left: 0, opacity: 0 },
+  card: { width: 375, backgroundColor: '#0d1f0d', overflow: 'hidden' },
+  topBar: { height: 8, backgroundColor: '#1a6b3c' },
+  map: { width: 375, height: 280 },
+  statsBlock: { paddingHorizontal: 24, paddingTop: 20, paddingBottom: 16 },
+  statRow: { flexDirection: 'row', justifyContent: 'space-between', marginBottom: 16 },
+  stat: { alignItems: 'center' },
+  statValue: { fontSize: 22, fontWeight: '800', color: '#fff' },
+  statLabel: { fontSize: 11, color: '#aaa', marginTop: 2 },
+  divider: { height: 1, backgroundColor: 'rgba(255,255,255,0.15)', marginBottom: 14 },
+  footer: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' },
+  appName: { fontSize: 15, fontWeight: '800', color: '#fff' },
+  brand: { fontSize: 11, color: '#1a6b3c', fontWeight: '600' },
+  bottomBar: { height: 8, backgroundColor: '#1a6b3c' },
 });
