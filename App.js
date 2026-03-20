@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
-import { StyleSheet, Text, View, TouchableOpacity, SafeAreaView, FlatList, Alert, TextInput, KeyboardAvoidingView, Platform } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity, SafeAreaView, FlatList, Alert, TextInput, KeyboardAvoidingView, Platform, ScrollView } from 'react-native';
+import Svg, { Path, Defs, LinearGradient, Stop, Line, Text as SvgText } from 'react-native-svg';
 import { StatusBar } from 'expo-status-bar';
 import * as Location from 'expo-location';
 import * as TaskManager from 'expo-task-manager';
@@ -68,7 +69,7 @@ function activityLabel(type, ruckWeight) {
   return type || 'Run';
 }
 
-function calcEffortScore(perceivedValue, distance, elapsed, elevGain, ruckWeight) {
+function calcEffortScore(perceivedValue, distance, elapsed, elevGain, ruckWeight, avgHR) {
   let score = perceivedValue;
   if (distance > 10 && elapsed > 0) {
     const miles = distance / 1609.34;
@@ -79,6 +80,11 @@ function calcEffortScore(perceivedValue, distance, elapsed, elevGain, ruckWeight
   const elevFt = elevGain * 3.28084;
   score += Math.floor(elevFt / 200);
   if (ruckWeight) score += Math.floor(parseFloat(ruckWeight) / 20);
+  if (avgHR) {
+    if (avgHR > 170) score += 2;
+    else if (avgHR > 155) score += 1;
+    else if (avgHR < 130) score -= 1;
+  }
   return Math.min(10, Math.max(1, Math.round(score)));
 }
 
@@ -118,12 +124,17 @@ TaskManager.defineTask(LOCATION_TASK, async ({ data, error }) => {
     const state = JSON.parse(raw);
 
     for (const loc of data.locations) {
-      const point = { latitude: loc.coords.latitude, longitude: loc.coords.longitude };
+      const alt = loc.coords.altitude ?? null;
+      const point = {
+        latitude: loc.coords.latitude,
+        longitude: loc.coords.longitude,
+        altitude: alt,
+        timestamp: loc.timestamp,
+      };
       if (state.coords.length > 0) {
         state.distance += haversineDistance(state.coords[state.coords.length - 1], point);
       }
       state.coords.push(point);
-      const alt = loc.coords.altitude;
       if (alt != null) {
         if (state.lastAlt != null && alt > state.lastAlt + 0.5) {
           state.elevGain += alt - state.lastAlt;
@@ -140,6 +151,121 @@ TaskManager.defineTask(LOCATION_TASK, async ({ data, error }) => {
     console.log('[BG] task error:', e);
   }
 });
+
+// --- Charts ---
+
+const CHART_W = 340;
+const CHART_H = 90;
+const CHART_PAD = { top: 8, bottom: 24, left: 36, right: 8 };
+
+function buildPath(points, xScale, yScale) {
+  return points.map((p, i) => `${i === 0 ? 'M' : 'L'} ${xScale(i)} ${yScale(p)}`).join(' ');
+}
+
+function ElevationChart({ coords }) {
+  const altPoints = coords.filter((c) => c.altitude != null).map((c) => c.altitude);
+  if (altPoints.length < 2) return null;
+
+  const w = CHART_W - CHART_PAD.left - CHART_PAD.right;
+  const h = CHART_H - CHART_PAD.top - CHART_PAD.bottom;
+  const minAlt = Math.min(...altPoints);
+  const maxAlt = Math.max(...altPoints);
+  const range = maxAlt - minAlt || 1;
+
+  // Downsample to max 80 points for perf
+  const step = Math.max(1, Math.floor(altPoints.length / 80));
+  const sampled = altPoints.filter((_, i) => i % step === 0);
+
+  const xScale = (i) => CHART_PAD.left + (i / (sampled.length - 1)) * w;
+  const yScale = (v) => CHART_PAD.top + h - ((v - minAlt) / range) * h;
+
+  const linePath = buildPath(sampled, xScale, yScale);
+  const areaPath = `${linePath} L ${xScale(sampled.length - 1)} ${CHART_PAD.top + h} L ${xScale(0)} ${CHART_PAD.top + h} Z`;
+
+  const minFt = formatElevation(minAlt);
+  const maxFt = formatElevation(maxAlt);
+
+  return (
+    <View style={chartStyles.container}>
+      <Text style={chartStyles.label}>Elevation</Text>
+      <Svg width={CHART_W} height={CHART_H}>
+        <Defs>
+          <LinearGradient id="elevGrad" x1="0" y1="0" x2="0" y2="1">
+            <Stop offset="0" stopColor="#1a6b3c" stopOpacity="0.6" />
+            <Stop offset="1" stopColor="#1a6b3c" stopOpacity="0.05" />
+          </LinearGradient>
+        </Defs>
+        {/* Y axis labels */}
+        <SvgText x={CHART_PAD.left - 4} y={CHART_PAD.top + 4} fontSize="9" fill="#aaa" textAnchor="end">{maxFt}ft</SvgText>
+        <SvgText x={CHART_PAD.left - 4} y={CHART_PAD.top + h + 1} fontSize="9" fill="#aaa" textAnchor="end">{minFt}ft</SvgText>
+        {/* Baseline */}
+        <Line x1={CHART_PAD.left} y1={CHART_PAD.top + h} x2={CHART_PAD.left + w} y2={CHART_PAD.top + h} stroke="#eee" strokeWidth="1" />
+        {/* Area fill */}
+        <Path d={areaPath} fill="url(#elevGrad)" />
+        {/* Line */}
+        <Path d={linePath} fill="none" stroke="#1a6b3c" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+      </Svg>
+    </View>
+  );
+}
+
+function PaceChart({ coords }) {
+  // Build per-0.25mi pace segments using timestamp + haversine
+  if (coords.length < 2 || !coords[0].timestamp) return null;
+
+  const SEGMENT_M = 402; // 0.25 miles in meters
+  const segments = [];
+  let segDist = 0;
+  let segStart = coords[0];
+
+  for (let i = 1; i < coords.length; i++) {
+    const d = haversineDistance(coords[i - 1], coords[i]);
+    segDist += d;
+    if (segDist >= SEGMENT_M) {
+      const elapsed = (coords[i].timestamp - segStart.timestamp) / 1000;
+      const pace = elapsed / 60 / (segDist / 1609.34); // min/mile
+      if (pace > 3 && pace < 30) segments.push(pace); // filter GPS noise
+      segDist = 0;
+      segStart = coords[i];
+    }
+  }
+
+  if (segments.length < 2) return null;
+
+  const w = CHART_W - CHART_PAD.left - CHART_PAD.right;
+  const h = CHART_H - CHART_PAD.top - CHART_PAD.bottom;
+  const minPace = Math.min(...segments);
+  const maxPace = Math.max(...segments);
+  const range = maxPace - minPace || 1;
+
+  // Pace: lower is faster, so invert y axis
+  const xScale = (i) => CHART_PAD.left + (i / (segments.length - 1)) * w;
+  const yScale = (v) => CHART_PAD.top + ((v - minPace) / range) * h; // inverted
+
+  const linePath = buildPath(segments, xScale, yScale);
+  const areaPath = `${linePath} L ${xScale(segments.length - 1)} ${CHART_PAD.top + h} L ${xScale(0)} ${CHART_PAD.top + h} Z`;
+
+  const fmtPace = (p) => { const m = Math.floor(p); const s = Math.round((p - m) * 60); return `${m}:${String(s).padStart(2, '0')}`; };
+
+  return (
+    <View style={chartStyles.container}>
+      <Text style={chartStyles.label}>Pace / mile  <Text style={chartStyles.labelSub}>by ¼ mi</Text></Text>
+      <Svg width={CHART_W} height={CHART_H}>
+        <Defs>
+          <LinearGradient id="paceGrad" x1="0" y1="0" x2="0" y2="1">
+            <Stop offset="0" stopColor="#111" stopOpacity="0.15" />
+            <Stop offset="1" stopColor="#111" stopOpacity="0.02" />
+          </LinearGradient>
+        </Defs>
+        <SvgText x={CHART_PAD.left - 4} y={CHART_PAD.top + 4} fontSize="9" fill="#aaa" textAnchor="end">{fmtPace(minPace)}</SvgText>
+        <SvgText x={CHART_PAD.left - 4} y={CHART_PAD.top + h + 1} fontSize="9" fill="#aaa" textAnchor="end">{fmtPace(maxPace)}</SvgText>
+        <Line x1={CHART_PAD.left} y1={CHART_PAD.top + h} x2={CHART_PAD.left + w} y2={CHART_PAD.top + h} stroke="#eee" strokeWidth="1" />
+        <Path d={areaPath} fill="url(#paceGrad)" />
+        <Path d={linePath} fill="none" stroke="#111" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+      </Svg>
+    </View>
+  );
+}
 
 // --- Share Card ---
 
@@ -234,7 +360,7 @@ function RunScreen({ onViewHistory }) {
     try {
       AppleHealthKit?.initHealthKit({
         permissions: {
-          read: [AppleHealthKit.Constants.Permissions.Workout],
+          read: [AppleHealthKit.Constants.Permissions.Workout, AppleHealthKit.Constants.Permissions.HeartRate],
           write: [AppleHealthKit.Constants.Permissions.Workout],
         },
       }, () => {});
@@ -368,8 +494,32 @@ function RunScreen({ onViewHistory }) {
   }
 
   async function submitRating(perceivedValue, label) {
-    const score = calcEffortScore(perceivedValue, pendingRun.distance, pendingRun.elapsed, pendingRun.elevGain, pendingRun.ruckWeight);
-    const run = { ...pendingRun, perceived: label, effortScore: score };
+    // Query heart rate samples for the run window
+    let avgHR = null;
+    let maxHR = null;
+    await new Promise((resolve) => {
+      try {
+        AppleHealthKit?.getHeartRateSamples({
+          startDate: new Date(pendingRun.startTime).toISOString(),
+          endDate: new Date(pendingRun.endTime).toISOString(),
+          ascending: true,
+          limit: 0,
+        }, (err, results) => {
+          if (!err && results?.length > 0) {
+            const values = results.map((r) => r.value);
+            avgHR = Math.round(values.reduce((s, v) => s + v, 0) / values.length);
+            maxHR = Math.round(Math.max(...values));
+            console.log(`[HealthKit] HR samples: ${results.length}, avg: ${avgHR}, max: ${maxHR}`);
+          } else if (err) {
+            console.log('[HealthKit] getHeartRateSamples error:', err);
+          }
+          resolve();
+        });
+      } catch (_) { resolve(); }
+    });
+
+    const score = calcEffortScore(perceivedValue, pendingRun.distance, pendingRun.elapsed, pendingRun.elevGain, pendingRun.ruckWeight, avgHR);
+    const run = { ...pendingRun, perceived: label, effortScore: score, avgHR, maxHR };
     await saveRun(run);
     try {
       AppleHealthKit?.saveWorkout({
@@ -550,7 +700,7 @@ function RunScreen({ onViewHistory }) {
   );
 }
 
-function HistoryScreen({ onBack }) {
+function HistoryScreen({ onBack, onSelectRun }) {
   const [runs, setRuns] = useState([]);
 
   useEffect(() => {
@@ -579,7 +729,7 @@ function HistoryScreen({ onBack }) {
           keyExtractor={(item) => String(item.id)}
           contentContainerStyle={{ padding: 20 }}
           renderItem={({ item }) => (
-            <View style={styles.runCard}>
+            <TouchableOpacity style={styles.runCard} onPress={() => onSelectRun(item)}>
               <View style={styles.row}>
                 <Text style={styles.activityTag}>{activityLabel(item.activity, item.ruckWeight)}</Text>
                 <Text style={styles.runDate}>{item.date}</Text>
@@ -597,12 +747,101 @@ function HistoryScreen({ onBack }) {
                   <Text style={styles.effortLabel}>Effort</Text>
                   <Text style={styles.effortScore}>{item.effortScore}/10</Text>
                   {item.perceived && <Text style={styles.effortPerceived}>· {item.perceived}</Text>}
+                  {item.avgHR != null && (
+                    <Text style={styles.effortPerceived}>· {item.avgHR} avg bpm</Text>
+                  )}
+                  {item.maxHR != null && (
+                    <Text style={styles.effortPerceived}>· {item.maxHR} max</Text>
+                  )}
                 </View>
               )}
-            </View>
+            </TouchableOpacity>
           )}
         />
       )}
+    </SafeAreaView>
+  );
+}
+
+function DetailScreen({ run, onBack }) {
+  const cardRef = useRef(null);
+  const coords = run.coords ?? [];
+  const region = coords.length > 0 ? {
+    latitude: coords.reduce((s, c) => s + c.latitude, 0) / coords.length,
+    longitude: coords.reduce((s, c) => s + c.longitude, 0) / coords.length,
+    latitudeDelta: 0.02,
+    longitudeDelta: 0.02,
+  } : { latitude: 37.78825, longitude: -122.4324, latitudeDelta: 0.02, longitudeDelta: 0.02 };
+
+  async function share() {
+    try {
+      const uri = await captureRef(cardRef, { format: 'png', quality: 1 });
+      await Sharing.shareAsync(uri, { mimeType: 'image/png', dialogTitle: 'Share your run' });
+    } catch (e) {
+      console.log('[Share] error:', e);
+    }
+  }
+
+  return (
+    <SafeAreaView style={styles.container}>
+      <StatusBar style="dark" />
+      <View style={styles.historyHeader}>
+        <TouchableOpacity onPress={onBack}>
+          <Text style={styles.backBtn}>← Back</Text>
+        </TouchableOpacity>
+        <Text style={styles.appTitle}>{activityLabel(run.activity, run.ruckWeight)}</Text>
+      </View>
+
+      <MapView style={detailStyles.map} region={region} scrollEnabled zoomEnabled>
+        {coords.length > 1 && <Polyline coordinates={coords} strokeColor="#111111" strokeWidth={4} />}
+      </MapView>
+
+      <ScrollView contentContainerStyle={detailStyles.scroll}>
+        <View style={styles.stats}>
+          <View style={styles.statBlock}>
+            <Text style={styles.statValue}>{formatDistance(run.distance)}</Text>
+            <Text style={styles.statLabel}>Miles</Text>
+          </View>
+          <View style={styles.statBlock}>
+            <Text style={styles.statValue}>{formatTime(run.elapsed)}</Text>
+            <Text style={styles.statLabel}>Time</Text>
+          </View>
+          <View style={styles.statBlock}>
+            <Text style={styles.statValue}>{formatPace(run.distance, run.elapsed)}</Text>
+            <Text style={styles.statLabel}>Pace /mi</Text>
+          </View>
+          <View style={styles.statBlock}>
+            <Text style={styles.statValue}>{formatElevation(run.elevGain)}</Text>
+            <Text style={styles.statLabel}>Ft Gain</Text>
+          </View>
+        </View>
+
+        {(run.effortScore != null || run.avgHR != null) && (
+          <View style={styles.detailMeta}>
+            {run.effortScore != null && (
+              <Text style={styles.detailMetaText}>Effort {run.effortScore}/10 · {run.perceived}</Text>
+            )}
+            {run.avgHR != null && (
+              <Text style={styles.detailMetaText}>{run.avgHR} avg bpm · {run.maxHR} max bpm</Text>
+            )}
+            <Text style={styles.detailMetaText}>{run.date}</Text>
+          </View>
+        )}
+
+        <ElevationChart coords={coords} />
+        <PaceChart coords={coords} />
+
+        <View style={[styles.controls, { paddingTop: 8 }]}>
+          <TouchableOpacity style={[styles.btn, styles.btnShare]} onPress={share}>
+            <Text style={styles.btnText}>Share Run</Text>
+          </TouchableOpacity>
+        </View>
+      </ScrollView>
+
+      {/* Off-screen share card */}
+      <View style={shareStyles.offscreen}>
+        <ShareCard run={run} cardRef={cardRef} />
+      </View>
     </SafeAreaView>
   );
 }
@@ -611,9 +850,16 @@ function HistoryScreen({ onBack }) {
 
 export default function App() {
   const [screen, setScreen] = useState('run');
-  return screen === 'run'
-    ? <RunScreen onViewHistory={() => setScreen('history')} />
-    : <HistoryScreen onBack={() => setScreen('run')} />;
+  const [selectedRun, setSelectedRun] = useState(null);
+
+  if (screen === 'run') return <RunScreen onViewHistory={() => setScreen('history')} />;
+  if (screen === 'detail') return <DetailScreen run={selectedRun} onBack={() => setScreen('history')} />;
+  return (
+    <HistoryScreen
+      onBack={() => setScreen('run')}
+      onSelectRun={(run) => { setSelectedRun(run); setScreen('detail'); }}
+    />
+  );
 }
 
 // --- Styles ---
@@ -664,6 +910,19 @@ const styles = StyleSheet.create({
   ratingSubtitle: { fontSize: 14, color: '#888', textAlign: 'center', marginBottom: 32 },
   ratingBtn: { backgroundColor: '#F2F2F2', borderRadius: 12, paddingVertical: 18, alignItems: 'center', marginBottom: 12 },
   ratingBtnText: { fontSize: 18, fontWeight: '700', color: '#111' },
+  detailMeta: { paddingHorizontal: 24, paddingBottom: 8, gap: 2 },
+  detailMetaText: { fontSize: 13, color: '#888' },
+});
+
+const detailStyles = StyleSheet.create({
+  map: { height: 220 },
+  scroll: { paddingBottom: 32 },
+});
+
+const chartStyles = StyleSheet.create({
+  container: { paddingHorizontal: 16, paddingTop: 16 },
+  label: { fontSize: 12, fontWeight: '700', color: '#555', marginBottom: 4, textTransform: 'uppercase', letterSpacing: 0.5 },
+  labelSub: { fontSize: 11, fontWeight: '400', color: '#aaa', textTransform: 'none', letterSpacing: 0 },
 });
 
 const shareStyles = StyleSheet.create({

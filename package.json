@@ -21,6 +21,7 @@
     "react-native": "0.83.2",
     "react-native-health": "^1.19.0",
     "react-native-maps": "1.26.20",
+    "react-native-svg": "15.15.3",
     "react-native-view-shot": "4.0.3"
   },
   "devDependencies": {
