@@ -498,13 +498,17 @@ function RunScreen({ onViewHistory }) {
     let avgHR = null;
     let maxHR = null;
     await new Promise((resolve) => {
+      // Safety timeout — never hang longer than 3s waiting for HealthKit
+      const timeout = setTimeout(resolve, 3000);
       try {
-        AppleHealthKit?.getHeartRateSamples({
+        if (!AppleHealthKit) { clearTimeout(timeout); resolve(); return; }
+        AppleHealthKit.getHeartRateSamples({
           startDate: new Date(pendingRun.startTime).toISOString(),
           endDate: new Date(pendingRun.endTime).toISOString(),
           ascending: true,
           limit: 0,
         }, (err, results) => {
+          clearTimeout(timeout);
           if (!err && results?.length > 0) {
             const values = results.map((r) => r.value);
             avgHR = Math.round(values.reduce((s, v) => s + v, 0) / values.length);
@@ -515,7 +519,7 @@ function RunScreen({ onViewHistory }) {
           }
           resolve();
         });
-      } catch (_) { resolve(); }
+      } catch (_) { clearTimeout(timeout); resolve(); }
     });
 
     const score = calcEffortScore(perceivedValue, pendingRun.distance, pendingRun.elapsed, pendingRun.elevGain, pendingRun.ruckWeight, avgHR);
@@ -668,7 +672,7 @@ function RunScreen({ onViewHistory }) {
         {status === 'done' && (
           <View>
             <TouchableOpacity style={[styles.btn, styles.btnShare]} onPress={shareRun}>
-              <Text style={styles.btnText}>Share Run</Text>
+              <Text style={styles.btnText}>Share {activity}</Text>
             </TouchableOpacity>
             <View style={styles.row}>
               <TouchableOpacity style={[styles.btn, styles.btnSecondary]} onPress={resetRun}>
@@ -833,7 +837,7 @@ function DetailScreen({ run, onBack }) {
 
         <View style={[styles.controls, { paddingTop: 8 }]}>
           <TouchableOpacity style={[styles.btn, styles.btnShare]} onPress={share}>
-            <Text style={styles.btnText}>Share Run</Text>
+            <Text style={styles.btnText}>Share {run.activity}</Text>
           </TouchableOpacity>
         </View>
       </ScrollView>
