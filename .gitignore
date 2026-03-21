@@ -38,3 +38,6 @@ yarn-error.*
 
 # generated native folders
 /android
+
+# build output
+/build

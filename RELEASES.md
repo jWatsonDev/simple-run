@@ -1,7 +1,17 @@
 # Ruck & Run — Release History
 
+## Build 11 — v1.0.0 (2026-03-21)
+**Status:** Building / Submitting to TestFlight
+
+### What's in this build
+- Same feature set as Build 3
+- Bumped build number to ensure App Store Connect registers new build
+- Introduced `scripts/build.sh` for programmatic archive → export → submit
+
+---
+
 ## Build 3 — v1.0.0 (2026-03-21)
-**Status:** Archiving / Submitting to TestFlight
+**Status:** Superseded
 
 ### What's in this build
 - GPS run tracking (Run, Ruck, Walk)
