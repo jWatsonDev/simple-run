@@ -363,7 +363,10 @@ function RunScreen({ onViewHistory }) {
           read: [AppleHealthKit.Constants.Permissions.Workout, AppleHealthKit.Constants.Permissions.HeartRate],
           write: [AppleHealthKit.Constants.Permissions.Workout],
         },
-      }, () => {});
+      }, (err) => {
+        if (err) Alert.alert('[DEBUG] HealthKit init failed', JSON.stringify(err));
+        else console.log('[HealthKit] init success');
+      });
     } catch (_) {}
     return () => {
       clearInterval(timerRef.current);
@@ -533,8 +536,8 @@ function RunScreen({ onViewHistory }) {
         distance: run.distance / 1609.34,
         distanceUnit: 'mile',
       }, (err, result) => {
-        if (err) console.log('[HealthKit] saveWorkout error:', err);
-        else console.log('[HealthKit] saveWorkout success:', result);
+        if (err) Alert.alert('[DEBUG] HealthKit saveWorkout failed', JSON.stringify(err));
+        else Alert.alert('[DEBUG] HealthKit saveWorkout OK', JSON.stringify(result));
       });
     } catch (_) {}
     setStatus('done');
