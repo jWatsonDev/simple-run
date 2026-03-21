@@ -20,7 +20,7 @@ platform :ios, podfile_properties['ios.deploymentTarget'] || '15.1'
 
 prepare_react_native_project!
 
-target 'SimpleRun' do
+target 'RuckRun' do
   use_expo_modules!
 
   if ENV['EXPO_USE_COMMUNITY_AUTOLINKING'] == '1'
@@ -61,8 +61,7 @@ target 'SimpleRun' do
     )
     installer.pods_project.targets.each do |target|
       target.build_configurations.each do |config|
-        config.build_settings['OTHER_CFLAGS'] ||= ['$(inherited)']
-        config.build_settings['OTHER_CFLAGS'] << '-Wno-implicit-function-declaration'
+        config.build_settings['OTHER_CPLUSPLUSFLAGS'] = '$(inherited) -Wno-error=incompatible-pointer-types-discards-qualifiers'
       end
     end
   end

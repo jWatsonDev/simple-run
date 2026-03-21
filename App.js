@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { StyleSheet, Text, View, TouchableOpacity, SafeAreaView, FlatList, Alert, TextInput, KeyboardAvoidingView, Platform, ScrollView } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity, SafeAreaView, FlatList, Alert, TextInput, KeyboardAvoidingView, Platform, ScrollView, Keyboard } from 'react-native';
 import Svg, { Path, Defs, LinearGradient, Stop, Line, Text as SvgText } from 'react-native-svg';
 import { StatusBar } from 'expo-status-bar';
 import * as Location from 'expo-location';
@@ -9,10 +9,6 @@ import * as Sharing from 'expo-sharing';
 import { captureRef } from 'react-native-view-shot';
 import MapView, { Polyline } from 'react-native-maps';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-let AppleHealthKit = null;
-try { AppleHealthKit = require('react-native-health').default; } catch (_) {}
-
-const HK_ACTIVITY = { Run: 'Running', Walk: 'Walking', Ruck: 'Hiking' };
 
 const STORAGE_KEY = 'simple_run_history';
 const RUN_STATE_KEY = 'simple_run_active';
@@ -69,7 +65,7 @@ function activityLabel(type, ruckWeight) {
   return type || 'Run';
 }
 
-function calcEffortScore(perceivedValue, distance, elapsed, elevGain, ruckWeight, avgHR) {
+function calcEffortScore(perceivedValue, distance, elapsed, elevGain, ruckWeight) {
   let score = perceivedValue;
   if (distance > 10 && elapsed > 0) {
     const miles = distance / 1609.34;
@@ -80,11 +76,6 @@ function calcEffortScore(perceivedValue, distance, elapsed, elevGain, ruckWeight
   const elevFt = elevGain * 3.28084;
   score += Math.floor(elevFt / 200);
   if (ruckWeight) score += Math.floor(parseFloat(ruckWeight) / 20);
-  if (avgHR) {
-    if (avgHR > 170) score += 2;
-    else if (avgHR > 155) score += 1;
-    else if (avgHR < 130) score -= 1;
-  }
   return Math.min(10, Math.max(1, Math.round(score)));
 }
 
@@ -277,7 +268,7 @@ function ShareCard({ run, cardRef }) {
     longitude: coords.reduce((s, c) => s + c.longitude, 0) / coords.length,
     latitudeDelta: 0.02,
     longitudeDelta: 0.02,
-  } : { latitude: 37.78825, longitude: -122.4324, latitudeDelta: 0.02, longitudeDelta: 0.02 };
+  } : null;
 
   return (
     <View ref={cardRef} style={shareStyles.card} collapsable={false}>
@@ -358,17 +349,6 @@ function RunScreen({ onViewHistory }) {
         });
       }
     }).catch(() => {});
-    try {
-      AppleHealthKit?.initHealthKit({
-        permissions: {
-          read: [AppleHealthKit.Constants.Permissions.Workout, AppleHealthKit.Constants.Permissions.HeartRate],
-          write: [AppleHealthKit.Constants.Permissions.Workout],
-        },
-      }, (err) => {
-        if (err) Alert.alert('[DEBUG] HealthKit init failed', JSON.stringify(err));
-        else console.log('[HealthKit] init success');
-      });
-    } catch (_) {}
     return () => {
       clearInterval(timerRef.current);
     };
@@ -498,49 +478,9 @@ function RunScreen({ onViewHistory }) {
   }
 
   async function submitRating(perceivedValue, label) {
-    // Query heart rate samples for the run window
-    let avgHR = null;
-    let maxHR = null;
-    await new Promise((resolve) => {
-      // Safety timeout — never hang longer than 3s waiting for HealthKit
-      const timeout = setTimeout(resolve, 3000);
-      try {
-        if (!AppleHealthKit) { clearTimeout(timeout); resolve(); return; }
-        AppleHealthKit.getHeartRateSamples({
-          startDate: new Date(pendingRun.startTime).toISOString(),
-          endDate: new Date(pendingRun.endTime).toISOString(),
-          ascending: true,
-          limit: 0,
-        }, (err, results) => {
-          clearTimeout(timeout);
-          if (!err && results?.length > 0) {
-            const values = results.map((r) => r.value);
-            avgHR = Math.round(values.reduce((s, v) => s + v, 0) / values.length);
-            maxHR = Math.round(Math.max(...values));
-            console.log(`[HealthKit] HR samples: ${results.length}, avg: ${avgHR}, max: ${maxHR}`);
-          } else if (err) {
-            console.log('[HealthKit] getHeartRateSamples error:', err);
-          }
-          resolve();
-        });
-      } catch (_) { clearTimeout(timeout); resolve(); }
-    });
-
-    const score = calcEffortScore(perceivedValue, pendingRun.distance, pendingRun.elapsed, pendingRun.elevGain, pendingRun.ruckWeight, avgHR);
-    const run = { ...pendingRun, perceived: label, effortScore: score, avgHR, maxHR };
+    const score = calcEffortScore(perceivedValue, pendingRun.distance, pendingRun.elapsed, pendingRun.elevGain, pendingRun.ruckWeight);
+    const run = { ...pendingRun, perceived: label, effortScore: score };
     await saveRun(run);
-    try {
-      AppleHealthKit?.saveWorkout({
-        type: HK_ACTIVITY[run.activity] ?? 'Running',
-        startDate: new Date(run.startTime).toISOString(),
-        endDate: new Date(run.endTime).toISOString(),
-        distance: run.distance / 1609.34,
-        distanceUnit: 'mile',
-      }, (err, result) => {
-        if (err) Alert.alert('[DEBUG] HealthKit saveWorkout failed', JSON.stringify(err));
-        else Alert.alert('[DEBUG] HealthKit saveWorkout OK', JSON.stringify(result));
-      });
-    } catch (_) {}
     setStatus('done');
   }
 
@@ -563,12 +503,12 @@ function RunScreen({ onViewHistory }) {
     setPendingRun(null);
   }
 
-  const initialRegion = {
-    latitude: coords[0]?.latitude ?? 37.78825,
-    longitude: coords[0]?.longitude ?? -122.4324,
+  const initialRegion = coords[0] ? {
+    latitude: coords[0].latitude,
+    longitude: coords[0].longitude,
     latitudeDelta: 0.01,
     longitudeDelta: 0.01,
-  };
+  } : undefined;
 
   if (status === 'rating') {
     return (
@@ -625,6 +565,8 @@ function RunScreen({ onViewHistory }) {
                 placeholder="e.g. 35"
                 placeholderTextColor="#bbb"
                 maxLength={3}
+                returnKeyType="done"
+                onSubmitEditing={() => Keyboard.dismiss()}
               />
             </View>
           )}
@@ -779,7 +721,7 @@ function DetailScreen({ run, onBack }) {
     longitude: coords.reduce((s, c) => s + c.longitude, 0) / coords.length,
     latitudeDelta: 0.02,
     longitudeDelta: 0.02,
-  } : { latitude: 37.78825, longitude: -122.4324, latitudeDelta: 0.02, longitudeDelta: 0.02 };
+  } : null;
 
   async function share() {
     try {

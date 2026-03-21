@@ -15,9 +15,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "13B07F861A680F5B00A75B9A"
-               BuildableName = "SimpleRun.app"
-               BlueprintName = "SimpleRun"
-               ReferencedContainer = "container:SimpleRun.xcodeproj">
+               BuildableName = "RuckRun.app"
+               BlueprintName = "RuckRun"
+               ReferencedContainer = "container:RuckRun.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -33,9 +33,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "00E356ED1AD99517003FC87E"
-               BuildableName = "SimpleRunTests.xctest"
-               BlueprintName = "SimpleRunTests"
-               ReferencedContainer = "container:SimpleRun.xcodeproj">
+               BuildableName = "RuckRunTests.xctest"
+               BlueprintName = "RuckRunTests"
+               ReferencedContainer = "container:RuckRun.xcodeproj">
             </BuildableReference>
          </TestableReference>
       </Testables>
@@ -55,9 +55,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "13B07F861A680F5B00A75B9A"
-            BuildableName = "SimpleRun.app"
-            BlueprintName = "SimpleRun"
-            ReferencedContainer = "container:SimpleRun.xcodeproj">
+            BuildableName = "RuckRun.app"
+            BlueprintName = "RuckRun"
+            ReferencedContainer = "container:RuckRun.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </LaunchAction>
@@ -72,9 +72,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "13B07F861A680F5B00A75B9A"
-            BuildableName = "SimpleRun.app"
-            BlueprintName = "SimpleRun"
-            ReferencedContainer = "container:SimpleRun.xcodeproj">
+            BuildableName = "RuckRun.app"
+            BlueprintName = "RuckRun"
+            ReferencedContainer = "container:RuckRun.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </ProfileAction>
