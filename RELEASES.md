@@ -1,7 +1,16 @@
 # Ruck & Run — Release History
 
+## Build 12 — v1.0.0 (2026-03-21)
+**Status:** Submitted to TestFlight
+
+### What's in this build
+- Removed effort score calculation — just asks how the run felt (Easy / Moderate / Hard / All Out)
+- Feeling label shown in history cards, detail screen, and share card
+
+---
+
 ## Build 11 — v1.0.0 (2026-03-21)
-**Status:** Building / Submitting to TestFlight
+**Status:** Superseded
 
 ### What's in this build
 - Same feature set as Build 3

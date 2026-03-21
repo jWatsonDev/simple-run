@@ -15,12 +15,7 @@ const RUN_STATE_KEY = 'simple_run_active';
 const LOCATION_TASK = 'background-location';
 const NOTIFICATION_ID = 'run-active';
 const ACTIVITY_TYPES = ['Run', 'Ruck', 'Walk'];
-const PERCEIVED = [
-  { label: 'Easy', value: 2 },
-  { label: 'Moderate', value: 5 },
-  { label: 'Hard', value: 7 },
-  { label: 'All Out', value: 10 },
-];
+const PERCEIVED = ['Easy', 'Moderate', 'Hard', 'All Out'];
 
 // --- Utilities ---
 
@@ -63,20 +58,6 @@ function formatElevation(meters) {
 function activityLabel(type, ruckWeight) {
   if (type === 'Ruck' && ruckWeight) return `Ruck (${ruckWeight} lbs)`;
   return type || 'Run';
-}
-
-function calcEffortScore(perceivedValue, distance, elapsed, elevGain, ruckWeight) {
-  let score = perceivedValue;
-  if (distance > 10 && elapsed > 0) {
-    const miles = distance / 1609.34;
-    const pace = elapsed / 60 / miles;
-    if (pace < 9) score += 1;
-    else if (pace > 14) score -= 1;
-  }
-  const elevFt = elevGain * 3.28084;
-  score += Math.floor(elevFt / 200);
-  if (ruckWeight) score += Math.floor(parseFloat(ruckWeight) / 20);
-  return Math.min(10, Math.max(1, Math.round(score)));
 }
 
 // --- Notification ---
@@ -298,10 +279,10 @@ function ShareCard({ run, cardRef }) {
             <Text style={shareStyles.statValue}>{formatPace(run?.distance ?? 0, run?.elapsed ?? 0)}</Text>
             <Text style={shareStyles.statLabel}>Pace /mi</Text>
           </View>
-          {run?.effortScore != null && (
+          {run?.perceived != null && (
             <View style={shareStyles.stat}>
-              <Text style={shareStyles.statValue}>{run.effortScore}/10</Text>
-              <Text style={shareStyles.statLabel}>Effort</Text>
+              <Text style={shareStyles.statValue}>{run.perceived}</Text>
+              <Text style={shareStyles.statLabel}>Felt</Text>
             </View>
           )}
         </View>
@@ -477,9 +458,8 @@ function RunScreen({ onViewHistory }) {
     setStatus('rating');
   }
 
-  async function submitRating(perceivedValue, label) {
-    const score = calcEffortScore(perceivedValue, pendingRun.distance, pendingRun.elapsed, pendingRun.elevGain, pendingRun.ruckWeight);
-    const run = { ...pendingRun, perceived: label, effortScore: score };
+  async function submitRating(label) {
+    const run = { ...pendingRun, perceived: label };
     await saveRun(run);
     setStatus('done');
   }
@@ -520,13 +500,13 @@ function RunScreen({ onViewHistory }) {
           <Text style={styles.ratingSubtitle}>
             {formatDistance(pendingRun.distance)} mi · {formatTime(pendingRun.elapsed)} · {formatElevation(pendingRun.elevGain)} ft gain
           </Text>
-          {PERCEIVED.map((p) => (
+          {PERCEIVED.map((label) => (
             <TouchableOpacity
-              key={p.label}
+              key={label}
               style={styles.ratingBtn}
-              onPress={() => submitRating(p.value, p.label)}
+              onPress={() => submitRating(label)}
             >
-              <Text style={styles.ratingBtnText}>{p.label}</Text>
+              <Text style={styles.ratingBtnText}>{label}</Text>
             </TouchableOpacity>
           ))}
         </View>
@@ -692,17 +672,9 @@ function HistoryScreen({ onBack, onSelectRun }) {
                   <Text style={styles.runStat}>{formatElevation(item.elevGain)} ft</Text>
                 )}
               </View>
-              {item.effortScore != null && (
+              {item.perceived && (
                 <View style={styles.effortRow}>
-                  <Text style={styles.effortLabel}>Effort</Text>
-                  <Text style={styles.effortScore}>{item.effortScore}/10</Text>
-                  {item.perceived && <Text style={styles.effortPerceived}>· {item.perceived}</Text>}
-                  {item.avgHR != null && (
-                    <Text style={styles.effortPerceived}>· {item.avgHR} avg bpm</Text>
-                  )}
-                  {item.maxHR != null && (
-                    <Text style={styles.effortPerceived}>· {item.maxHR} max</Text>
-                  )}
+                  <Text style={styles.effortPerceived}>{item.perceived}</Text>
                 </View>
               )}
             </TouchableOpacity>
@@ -766,17 +738,10 @@ function DetailScreen({ run, onBack }) {
           </View>
         </View>
 
-        {(run.effortScore != null || run.avgHR != null) && (
-          <View style={styles.detailMeta}>
-            {run.effortScore != null && (
-              <Text style={styles.detailMetaText}>Effort {run.effortScore}/10 · {run.perceived}</Text>
-            )}
-            {run.avgHR != null && (
-              <Text style={styles.detailMetaText}>{run.avgHR} avg bpm · {run.maxHR} max bpm</Text>
-            )}
-            <Text style={styles.detailMetaText}>{run.date}</Text>
-          </View>
-        )}
+        <View style={styles.detailMeta}>
+          {run.perceived && <Text style={styles.detailMetaText}>{run.perceived}</Text>}
+          <Text style={styles.detailMetaText}>{run.date}</Text>
+        </View>
 
         <ElevationChart coords={coords} />
         <PaceChart coords={coords} />
@@ -851,10 +816,8 @@ const styles = StyleSheet.create({
   runDate: { fontSize: 13, color: '#888', marginLeft: 'auto' },
   activityTag: { fontSize: 13, fontWeight: '700', color: '#111' },
   runStat: { fontSize: 15, fontWeight: '600', color: '#111', marginRight: 12 },
-  effortRow: { flexDirection: 'row', alignItems: 'center', marginTop: 8, paddingTop: 8, borderTopWidth: 1, borderTopColor: '#eee' },
-  effortLabel: { fontSize: 12, color: '#888', marginRight: 6 },
-  effortScore: { fontSize: 15, fontWeight: '800', color: '#111' },
-  effortPerceived: { fontSize: 12, color: '#888', marginLeft: 4 },
+  effortRow: { marginTop: 8, paddingTop: 8, borderTopWidth: 1, borderTopColor: '#eee' },
+  effortPerceived: { fontSize: 12, color: '#888' },
   ratingContainer: { flex: 1, paddingHorizontal: 24, justifyContent: 'center' },
   ratingTitle: { fontSize: 24, fontWeight: '700', color: '#111', textAlign: 'center', marginBottom: 8 },
   ratingSubtitle: { fontSize: 14, color: '#888', textAlign: 'center', marginBottom: 32 },
