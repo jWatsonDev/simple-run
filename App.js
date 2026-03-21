@@ -100,12 +100,13 @@ Notifications.setNotificationHandler({
 
 async function updateNotification(distance, elapsed) {
   try {
-    await Notifications.dismissNotificationAsync(NOTIFICATION_ID).catch(() => {});
     await Notifications.scheduleNotificationAsync({
       identifier: NOTIFICATION_ID,
       content: {
         title: 'Ruck & Run · Active',
         body: `${formatDistance(distance)} mi · ${formatTime(elapsed)} · ${formatPace(distance, elapsed)} /mi`,
+        sound: false,
+        sticky: true,
       },
       trigger: null,
     });
