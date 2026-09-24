@@ -1,0 +1,29 @@
+name: HybridAthlete
+options:
+  bundleIdPrefix: com.jwatsondev
+  deploymentTarget:
+    iOS: "17.0"
+
+targets:
+  HybridAthlete:
+    type: application
+    platform: iOS
+    sources:
+      - HybridAthlete
+    info:
+      path: HybridAthlete/Info.plist
+      properties:
+        UILaunchScreen: {}
+        NSHealthShareUsageDescription: "Hybrid Athlete reads your resting heart rate and heart rate variability to show how today's effort compares to your personal baseline."
+        NSHealthUpdateUsageDescription: "Hybrid Athlete may save workouts to Apple Health."
+    entitlements:
+      path: HybridAthlete/HybridAthlete.entitlements
+      properties:
+        com.apple.developer.healthkit: true
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.jwatsondev.hybridathlete
+        DEVELOPMENT_TEAM: 6TMKWLMV2K
+        SWIFT_VERSION: "5.0"
+        TARGETED_DEVICE_FAMILY: "1"
+        CODE_SIGN_STYLE: Automatic
