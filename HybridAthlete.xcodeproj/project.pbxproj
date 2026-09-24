@@ -7,17 +7,54 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		04F193199C373E5D326585BD /* ActivityStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36CE2C492C85B86A700DC0E5 /* ActivityStore.swift */; };
 		2020AA5BCF301BE126DDA624 /* HealthKitManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F22B3BA9543F8D9C0082120A /* HealthKitManager.swift */; };
+		5422BFD8E322A6CA29BF44EE /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC4D8A57E79F6F3B7000BD96 /* HomeView.swift */; };
+		5FAD55985BF002AF00824D81 /* ActivityRecorder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63FDDC9D13E78675A9750660 /* ActivityRecorder.swift */; };
+		6338813615383283AF7F7E6D /* ActivityDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 80870564E02268F8173F8780 /* ActivityDetailView.swift */; };
+		7170D5915C34A3154BA9905B /* FlowUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6C3070F7F109B3ECA28CBAB /* FlowUITests.swift */; };
+		72AFFD721C47DE9C9810F7FC /* DifficultyEngineTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 271651D29E458413D55B43D7 /* DifficultyEngineTests.swift */; };
 		9E7057A18B35CD080075060D /* HybridAthleteApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6CB45D5DBECEEE1FDB31FD81 /* HybridAthleteApp.swift */; };
-		F5A0180639EF667CBDCD6D0F /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9095390A19D3F9CB0212B2AD /* ContentView.swift */; };
+		AA1830ADF00562118458F5CA /* Format.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EF715DAB365D89A3B3C5A9C /* Format.swift */; };
+		BBC775AB0DDDB7B0810B5A6A /* Activity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9FAF2765B802EBD97B87B924 /* Activity.swift */; };
+		BDEAAC1A3962B1A18E497E50 /* RecordingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BF7B37E04D083C82371067C /* RecordingView.swift */; };
+		F5E65283910DF563FB833E85 /* DifficultyEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 646922885D9E5B101B05FCC8 /* DifficultyEngine.swift */; };
 /* End PBXBuildFile section */
 
+/* Begin PBXContainerItemProxy section */
+		3892523989398DA667C5F9FC /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = FEEA58DFE330C8CC7BD5B800 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 9D72C3628ECAD71EAC405F83;
+			remoteInfo = HybridAthlete;
+		};
+		50E16C38B335BF72E3DB5373 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = FEEA58DFE330C8CC7BD5B800 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 9D72C3628ECAD71EAC405F83;
+			remoteInfo = HybridAthlete;
+		};
+/* End PBXContainerItemProxy section */
+
 /* Begin PBXFileReference section */
+		271651D29E458413D55B43D7 /* DifficultyEngineTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DifficultyEngineTests.swift; sourceTree = "<group>"; };
+		2EF715DAB365D89A3B3C5A9C /* Format.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Format.swift; sourceTree = "<group>"; };
+		327886D4BEFF0E215357CF36 /* HybridAthleteTests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = HybridAthleteTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		36CE2C492C85B86A700DC0E5 /* ActivityStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityStore.swift; sourceTree = "<group>"; };
+		3C468341F4EBCE96A2798BA1 /* HybridAthleteUITests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = HybridAthleteUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		5BE05F1C631C21E85F131DBE /* HybridAthlete.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = HybridAthlete.entitlements; sourceTree = "<group>"; };
+		63FDDC9D13E78675A9750660 /* ActivityRecorder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityRecorder.swift; sourceTree = "<group>"; };
+		646922885D9E5B101B05FCC8 /* DifficultyEngine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DifficultyEngine.swift; sourceTree = "<group>"; };
 		6CB45D5DBECEEE1FDB31FD81 /* HybridAthleteApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HybridAthleteApp.swift; sourceTree = "<group>"; };
 		6D9E57BC0F7634E7B0060EC6 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		6E52BF8C6E7FC3A1257ACF87 /* HybridAthlete.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = HybridAthlete.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		9095390A19D3F9CB0212B2AD /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		7BF7B37E04D083C82371067C /* RecordingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecordingView.swift; sourceTree = "<group>"; };
+		80870564E02268F8173F8780 /* ActivityDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityDetailView.swift; sourceTree = "<group>"; };
+		9FAF2765B802EBD97B87B924 /* Activity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Activity.swift; sourceTree = "<group>"; };
+		AC4D8A57E79F6F3B7000BD96 /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
+		E6C3070F7F109B3ECA28CBAB /* FlowUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlowUITests.swift; sourceTree = "<group>"; };
 		F22B3BA9543F8D9C0082120A /* HealthKitManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HealthKitManager.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -25,11 +62,14 @@
 		1F7F8BC5417B19A8BA6A1C40 /* HybridAthlete */ = {
 			isa = PBXGroup;
 			children = (
-				9095390A19D3F9CB0212B2AD /* ContentView.swift */,
+				63FDDC9D13E78675A9750660 /* ActivityRecorder.swift */,
+				36CE2C492C85B86A700DC0E5 /* ActivityStore.swift */,
 				F22B3BA9543F8D9C0082120A /* HealthKitManager.swift */,
 				5BE05F1C631C21E85F131DBE /* HybridAthlete.entitlements */,
 				6CB45D5DBECEEE1FDB31FD81 /* HybridAthleteApp.swift */,
 				6D9E57BC0F7634E7B0060EC6 /* Info.plist */,
+				D1FAD3E7660C08E52CF0D42F /* Models */,
+				77F619B46AA7E567ADEB11C3 /* Views */,
 			);
 			path = HybridAthlete;
 			sourceTree = "<group>";
@@ -38,21 +78,97 @@
 			isa = PBXGroup;
 			children = (
 				6E52BF8C6E7FC3A1257ACF87 /* HybridAthlete.app */,
+				327886D4BEFF0E215357CF36 /* HybridAthleteTests.xctest */,
+				3C468341F4EBCE96A2798BA1 /* HybridAthleteUITests.xctest */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		77F619B46AA7E567ADEB11C3 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				80870564E02268F8173F8780 /* ActivityDetailView.swift */,
+				AC4D8A57E79F6F3B7000BD96 /* HomeView.swift */,
+				7BF7B37E04D083C82371067C /* RecordingView.swift */,
+			);
+			path = Views;
 			sourceTree = "<group>";
 		};
 		8A1E613A7A7E66F31182557D = {
 			isa = PBXGroup;
 			children = (
 				1F7F8BC5417B19A8BA6A1C40 /* HybridAthlete */,
+				A3B4BBE6924CD29A79616B43 /* HybridAthleteTests */,
+				EB72E1804DD6B345297FC5AE /* HybridAthleteUITests */,
 				2399EB2D8663BAE971EA8D55 /* Products */,
 			);
+			sourceTree = "<group>";
+		};
+		A3B4BBE6924CD29A79616B43 /* HybridAthleteTests */ = {
+			isa = PBXGroup;
+			children = (
+				271651D29E458413D55B43D7 /* DifficultyEngineTests.swift */,
+			);
+			path = HybridAthleteTests;
+			sourceTree = "<group>";
+		};
+		D1FAD3E7660C08E52CF0D42F /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				9FAF2765B802EBD97B87B924 /* Activity.swift */,
+				646922885D9E5B101B05FCC8 /* DifficultyEngine.swift */,
+				2EF715DAB365D89A3B3C5A9C /* Format.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		EB72E1804DD6B345297FC5AE /* HybridAthleteUITests */ = {
+			isa = PBXGroup;
+			children = (
+				E6C3070F7F109B3ECA28CBAB /* FlowUITests.swift */,
+			);
+			path = HybridAthleteUITests;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
+		499F1C9A49FA6E0A38B1D05C /* HybridAthleteTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 00C00733CC9A729D81B1B0D4 /* Build configuration list for PBXNativeTarget "HybridAthleteTests" */;
+			buildPhases = (
+				358B66194C00A22B3B5A1D4F /* Sources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				FD8816609BE27106429D8CCD /* PBXTargetDependency */,
+			);
+			name = HybridAthleteTests;
+			packageProductDependencies = (
+			);
+			productName = HybridAthleteTests;
+			productReference = 327886D4BEFF0E215357CF36 /* HybridAthleteTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		558EE98581A81404B60CC913 /* HybridAthleteUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 3358E01E3366C202FC065EF3 /* Build configuration list for PBXNativeTarget "HybridAthleteUITests" */;
+			buildPhases = (
+				4D285656FC46EF042349B225 /* Sources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				4B21C6D5F49387163CC7346B /* PBXTargetDependency */,
+			);
+			name = HybridAthleteUITests;
+			packageProductDependencies = (
+			);
+			productName = HybridAthleteUITests;
+			productReference = 3C468341F4EBCE96A2798BA1 /* HybridAthleteUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
 		9D72C3628ECAD71EAC405F83 /* HybridAthlete */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 8EBF71D312A67D4F2EFDE80B /* Build configuration list for PBXNativeTarget "HybridAthlete" */;
@@ -79,6 +195,13 @@
 				BuildIndependentTargetsInParallel = YES;
 				LastUpgradeCheck = 1430;
 				TargetAttributes = {
+					499F1C9A49FA6E0A38B1D05C = {
+						DevelopmentTeam = 6TMKWLMV2K;
+					};
+					558EE98581A81404B60CC913 = {
+						DevelopmentTeam = 6TMKWLMV2K;
+						TestTargetID = 9D72C3628ECAD71EAC405F83;
+					};
 					9D72C3628ECAD71EAC405F83 = {
 						DevelopmentTeam = 6TMKWLMV2K;
 						ProvisioningStyle = Automatic;
@@ -100,22 +223,60 @@
 			projectRoot = "";
 			targets = (
 				9D72C3628ECAD71EAC405F83 /* HybridAthlete */,
+				499F1C9A49FA6E0A38B1D05C /* HybridAthleteTests */,
+				558EE98581A81404B60CC913 /* HybridAthleteUITests */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXSourcesBuildPhase section */
+		358B66194C00A22B3B5A1D4F /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				72AFFD721C47DE9C9810F7FC /* DifficultyEngineTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		4D285656FC46EF042349B225 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				7170D5915C34A3154BA9905B /* FlowUITests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		952CCEAE7BCCE9520DAB188E /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				F5A0180639EF667CBDCD6D0F /* ContentView.swift in Sources */,
+				BBC775AB0DDDB7B0810B5A6A /* Activity.swift in Sources */,
+				6338813615383283AF7F7E6D /* ActivityDetailView.swift in Sources */,
+				5FAD55985BF002AF00824D81 /* ActivityRecorder.swift in Sources */,
+				04F193199C373E5D326585BD /* ActivityStore.swift in Sources */,
+				F5E65283910DF563FB833E85 /* DifficultyEngine.swift in Sources */,
+				AA1830ADF00562118458F5CA /* Format.swift in Sources */,
 				2020AA5BCF301BE126DDA624 /* HealthKitManager.swift in Sources */,
+				5422BFD8E322A6CA29BF44EE /* HomeView.swift in Sources */,
 				9E7057A18B35CD080075060D /* HybridAthleteApp.swift in Sources */,
+				BDEAAC1A3962B1A18E497E50 /* RecordingView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		4B21C6D5F49387163CC7346B /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 9D72C3628ECAD71EAC405F83 /* HybridAthlete */;
+			targetProxy = 3892523989398DA667C5F9FC /* PBXContainerItemProxy */;
+		};
+		FD8816609BE27106429D8CCD /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 9D72C3628ECAD71EAC405F83 /* HybridAthlete */;
+			targetProxy = 50E16C38B335BF72E3DB5373 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
 		20D429FA1CDC45BD1E87C800 /* Release */ = {
@@ -194,6 +355,25 @@
 			};
 			name = Release;
 		};
+		355990D19F4B76164BEA9913 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				DEVELOPMENT_TEAM = 6TMKWLMV2K;
+				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.jwatsondev.HybridAthleteUITests;
+				SDKROOT = iphoneos;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = HybridAthlete;
+			};
+			name = Debug;
+		};
 		4BA53D4F09172D75C00C06F2 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -257,6 +437,25 @@
 			};
 			name = Debug;
 		};
+		C626EF8C2D163622A8844DF4 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				DEVELOPMENT_TEAM = 6TMKWLMV2K;
+				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.jwatsondev.HybridAthleteUITests;
+				SDKROOT = iphoneos;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = HybridAthlete;
+			};
+			name = Release;
+		};
 		D0B42441749396CAF4ED8554 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -277,9 +476,65 @@
 			};
 			name = Debug;
 		};
+		EA12DE98BF24782AC2B384FF /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				DEVELOPMENT_TEAM = 6TMKWLMV2K;
+				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.jwatsondev.HybridAthleteTests;
+				SDKROOT = iphoneos;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/HybridAthlete.app/HybridAthlete";
+			};
+			name = Debug;
+		};
+		FA3E566B6221E722C2429642 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				DEVELOPMENT_TEAM = 6TMKWLMV2K;
+				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.jwatsondev.HybridAthleteTests;
+				SDKROOT = iphoneos;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/HybridAthlete.app/HybridAthlete";
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		00C00733CC9A729D81B1B0D4 /* Build configuration list for PBXNativeTarget "HybridAthleteTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				EA12DE98BF24782AC2B384FF /* Debug */,
+				FA3E566B6221E722C2429642 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		3358E01E3366C202FC065EF3 /* Build configuration list for PBXNativeTarget "HybridAthleteUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				355990D19F4B76164BEA9913 /* Debug */,
+				C626EF8C2D163622A8844DF4 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
 		8EBF71D312A67D4F2EFDE80B /* Build configuration list for PBXNativeTarget "HybridAthlete" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (

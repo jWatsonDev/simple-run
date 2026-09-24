@@ -13,13 +13,21 @@ targets:
     info:
       path: HybridAthlete/Info.plist
       properties:
+        CFBundleDisplayName: "Ruck & Run"
+        CFBundleShortVersionString: "1.0"
+        CFBundleVersion: "1"
         UILaunchScreen: {}
-        NSHealthShareUsageDescription: "Hybrid Athlete reads your resting heart rate and heart rate variability to show how today's effort compares to your personal baseline."
-        NSHealthUpdateUsageDescription: "Hybrid Athlete may save workouts to Apple Health."
+        UISupportedInterfaceOrientations: [UIInterfaceOrientationPortrait]
+        UIBackgroundModes: [location]
+        NSLocationWhenInUseUsageDescription: "Ruck & Run uses your location to track distance, pace and route during a run, walk or ruck, including while your screen is locked."
+        NSMotionUsageDescription: "Ruck & Run uses the barometer to measure how much you climbed."
+        NSHealthShareUsageDescription: "Ruck & Run reads your heart rate, sleep, resting heart rate, HRV, VO2 max, body weight, logged drinks and past workouts to rate how hard each session was and explain why."
+        NSHealthUpdateUsageDescription: "Ruck & Run saves your runs, walks and rucks to Apple Health, including the route."
     entitlements:
       path: HybridAthlete/HybridAthlete.entitlements
       properties:
         com.apple.developer.healthkit: true
+        com.apple.developer.healthkit.access: []
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.jwatsondev.hybridathlete
@@ -27,3 +35,42 @@ targets:
         SWIFT_VERSION: "5.0"
         TARGETED_DEVICE_FAMILY: "1"
         CODE_SIGN_STYLE: Automatic
+
+  HybridAthleteTests:
+    type: bundle.unit-test
+    platform: iOS
+    sources:
+      - HybridAthleteTests
+    dependencies:
+      - target: HybridAthlete
+    settings:
+      base:
+        DEVELOPMENT_TEAM: 6TMKWLMV2K
+        SWIFT_VERSION: "5.0"
+        GENERATE_INFOPLIST_FILE: YES
+
+  HybridAthleteUITests:
+    type: bundle.ui-testing
+    platform: iOS
+    sources:
+      - HybridAthleteUITests
+    dependencies:
+      - target: HybridAthlete
+    settings:
+      base:
+        DEVELOPMENT_TEAM: 6TMKWLMV2K
+        SWIFT_VERSION: "5.0"
+        GENERATE_INFOPLIST_FILE: YES
+        TEST_TARGET_NAME: HybridAthlete
+
+schemes:
+  HybridAthlete:
+    build:
+      targets:
+        HybridAthlete: all
+        HybridAthleteTests: [test]
+        HybridAthleteUITests: [test]
+    test:
+      targets:
+        - HybridAthleteTests
+        - HybridAthleteUITests

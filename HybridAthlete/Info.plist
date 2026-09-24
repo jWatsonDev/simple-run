@@ -4,6 +4,8 @@
 <dict>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
+	<key>CFBundleDisplayName</key>
+	<string>Ruck &amp; Run</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
@@ -19,10 +21,22 @@
 	<key>CFBundleVersion</key>
 	<string>1</string>
 	<key>NSHealthShareUsageDescription</key>
-	<string>Hybrid Athlete reads your resting heart rate and heart rate variability to show how today's effort compares to your personal baseline.</string>
+	<string>Ruck &amp; Run reads your heart rate, sleep, resting heart rate, HRV, VO2 max, body weight, logged drinks and past workouts to rate how hard each session was and explain why.</string>
 	<key>NSHealthUpdateUsageDescription</key>
-	<string>Hybrid Athlete may save workouts to Apple Health.</string>
+	<string>Ruck &amp; Run saves your runs, walks and rucks to Apple Health, including the route.</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>Ruck &amp; Run uses your location to track distance, pace and route during a run, walk or ruck, including while your screen is locked.</string>
+	<key>NSMotionUsageDescription</key>
+	<string>Ruck &amp; Run uses the barometer to measure how much you climbed.</string>
+	<key>UIBackgroundModes</key>
+	<array>
+		<string>location</string>
+	</array>
 	<key>UILaunchScreen</key>
 	<dict/>
+	<key>UISupportedInterfaceOrientations</key>
+	<array>
+		<string>UIInterfaceOrientationPortrait</string>
+	</array>
 </dict>
 </plist>
