@@ -34,7 +34,15 @@ xcodegen generate        # after editing project.yml
 open HybridAthlete.xcodeproj
 ```
 
-- Team ID: 6TMKWLMV2K. Bundle ID currently `com.jwatsondev.hybridathlete` (decide before submission: reuse Ruck & Run's `com.jwatsondev.simplerun` / ASC 6760625166, or new listing).
+- Team ID: 6TMKWLMV2K. Bundle ID `com.jwatsondev.simplerun` — ships into the existing Ruck & Run App Store Connect listing (ASC 6760625166). Build numbers continue from the RN builds (13+).
+
+## Shipping to TestFlight
+
+```bash
+./scripts/ship.sh <build_number>   # archive + upload via the Xcode-signed-in account
+```
+
+Build number must be higher than the last uploaded build (see RELEASES on rn-archive for RN history; Swift started at 13).
 
 ---
 
