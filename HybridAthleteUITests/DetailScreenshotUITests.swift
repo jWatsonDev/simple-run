@@ -5,6 +5,7 @@ final class DetailScreenshotUITests: XCTestCase {
     func testDetailScreen() throws {
         let app = XCUIApplication()
         app.launchArguments = ["-demoActivity"]
+        if let dir = ProcessInfo.processInfo.environment["SCREENSHOT_DIR"] { app.launchEnvironment["SHARE_CARD_DIR"] = dir }
         app.launch()
         let springboard = XCUIApplication(bundleIdentifier: "com.apple.springboard")
         let hosts = [app, springboard, XCUIApplication(bundleIdentifier: "com.apple.HealthPrivacyService")]
@@ -29,6 +30,11 @@ final class DetailScreenshotUITests: XCTestCase {
         app.swipeUp(velocity: .fast)
         sleep(1)
         shot("detail-4")
+
+        app.navigationBars.buttons["Share"].tap()
+        XCTAssertTrue(app.buttons["Done"].waitForExistence(timeout: 15))
+        sleep(1)
+        shot("share-sheet")
     }
 
     private func shot(_ name: String) {

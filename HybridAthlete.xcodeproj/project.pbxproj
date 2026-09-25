@@ -17,6 +17,7 @@
 		6338813615383283AF7F7E6D /* ActivityDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 80870564E02268F8173F8780 /* ActivityDetailView.swift */; };
 		7170D5915C34A3154BA9905B /* FlowUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6C3070F7F109B3ECA28CBAB /* FlowUITests.swift */; };
 		72AFFD721C47DE9C9810F7FC /* DifficultyEngineTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 271651D29E458413D55B43D7 /* DifficultyEngineTests.swift */; };
+		820621B9B9FB0FBCF5D7F1E0 /* ShareCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0242D5F69F79B34FCB69D7C5 /* ShareCard.swift */; };
 		9E7057A18B35CD080075060D /* HybridAthleteApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6CB45D5DBECEEE1FDB31FD81 /* HybridAthleteApp.swift */; };
 		AA1830ADF00562118458F5CA /* Format.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EF715DAB365D89A3B3C5A9C /* Format.swift */; };
 		AA40DD84BF8506DE85BBA80B /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 702AA756BEB0BDC0E1748CD3 /* Assets.xcassets */; };
@@ -46,6 +47,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		0242D5F69F79B34FCB69D7C5 /* ShareCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareCard.swift; sourceTree = "<group>"; };
 		271651D29E458413D55B43D7 /* DifficultyEngineTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DifficultyEngineTests.swift; sourceTree = "<group>"; };
 		2EF715DAB365D89A3B3C5A9C /* Format.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Format.swift; sourceTree = "<group>"; };
 		327886D4BEFF0E215357CF36 /* HybridAthleteTests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = HybridAthleteTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -107,6 +109,7 @@
 				80870564E02268F8173F8780 /* ActivityDetailView.swift */,
 				AC4D8A57E79F6F3B7000BD96 /* HomeView.swift */,
 				7BF7B37E04D083C82371067C /* RecordingView.swift */,
+				0242D5F69F79B34FCB69D7C5 /* ShareCard.swift */,
 				6CA7EC4BC8B890D162417B9B /* Theme.swift */,
 			);
 			path = Views;
@@ -298,6 +301,7 @@
 				5422BFD8E322A6CA29BF44EE /* HomeView.swift in Sources */,
 				9E7057A18B35CD080075060D /* HybridAthleteApp.swift in Sources */,
 				BDEAAC1A3962B1A18E497E50 /* RecordingView.swift in Sources */,
+				820621B9B9FB0FBCF5D7F1E0 /* ShareCard.swift in Sources */,
 				2F68747104EF17FC0F27D1F4 /* Theme.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -381,7 +385,7 @@
 				CODE_SIGN_ENTITLEMENTS = HybridAthlete/HybridAthlete.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 13;
+				CURRENT_PROJECT_VERSION = 14;
 				DEVELOPMENT_TEAM = 6TMKWLMV2K;
 				INFOPLIST_FILE = HybridAthlete/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -504,7 +508,7 @@
 				CODE_SIGN_ENTITLEMENTS = HybridAthlete/HybridAthlete.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 13;
+				CURRENT_PROJECT_VERSION = 14;
 				DEVELOPMENT_TEAM = 6TMKWLMV2K;
 				INFOPLIST_FILE = HybridAthlete/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (

@@ -5,6 +5,9 @@ struct ActivityDetailView: View {
     @EnvironmentObject private var store: ActivityStore
     let id: UUID
 
+    @State private var shareImage: UIImage?
+    @State private var renderingShare = false
+
     var body: some View {
         Group {
             if let activity = store.activity(id: id) {
@@ -15,6 +18,36 @@ struct ActivityDetailView: View {
         }
         .background(Color(.systemGroupedBackground))
         .navigationBarTitleDisplayMode(.inline)
+        .toolbar {
+            ToolbarItem(placement: .topBarTrailing) {
+                if let a = store.activity(id: id) {
+                    Button { share(a) } label: {
+                        if renderingShare { ProgressView() } else { Image(systemName: "square.and.arrow.up") }
+                    }
+                    .disabled(renderingShare)
+                    .accessibilityLabel("Share")
+                }
+            }
+        }
+        .sheet(isPresented: Binding(get: { shareImage != nil }, set: { if !$0 { shareImage = nil } })) {
+            if let shareImage {
+                ShareSheet(image: shareImage, title: "My \(store.activity(id: id)?.type.title.lowercased() ?? "run")")
+                    .presentationDetents([.large])
+            }
+        }
+    }
+
+    private func share(_ a: Activity) {
+        renderingShare = true
+        Task {
+            shareImage = await ShareCard.render(a)
+            renderingShare = false
+            #if DEBUG
+            if let dir = ProcessInfo.processInfo.environment["SHARE_CARD_DIR"], let png = shareImage?.pngData() {
+                try? png.write(to: URL(fileURLWithPath: dir).appendingPathComponent("share-card.png"))
+            }
+            #endif
+        }
     }
 
     private func content(_ a: Activity) -> some View {
@@ -31,6 +64,15 @@ struct ActivityDetailView: View {
                 }
 
                 StatGrid(activity: a)
+
+                Button { share(a) } label: {
+                    Label("Share \(a.type.title)", systemImage: "square.and.arrow.up")
+                        .font(.headline)
+                        .frame(maxWidth: .infinity)
+                        .padding(.vertical, 8)
+                }
+                .buttonStyle(.borderedProminent)
+                .disabled(renderingShare || a.difficulty == nil)
 
                 if let d = a.difficulty, !(d.effortFactors + d.recoveryFactors).isEmpty {
                     Card(title: "Why it scored \(String(format: "%.1f", d.score))") {
