@@ -14,6 +14,7 @@ final class HealthKitManager: ObservableObject {
     private let vo2MaxType = HKQuantityType(.vo2Max)
     private let bodyMassType = HKQuantityType(.bodyMass)
     private let distanceType = HKQuantityType(.distanceWalkingRunning)
+    private let energyType = HKQuantityType(.activeEnergyBurned)
     private let alcoholType = HKQuantityType(.numberOfAlcoholicBeverages)
     private let sleepType = HKCategoryType(.sleepAnalysis)
 
@@ -28,7 +29,7 @@ final class HealthKitManager: ObservableObject {
             heartRateType, restingHRType, hrvType, vo2MaxType, bodyMassType, distanceType, alcoholType, sleepType,
             HKObjectType.workoutType(), HKSeriesType.workoutRoute(), HKCharacteristicType(.dateOfBirth),
         ]
-        let share: Set<HKSampleType> = [HKObjectType.workoutType(), HKSeriesType.workoutRoute(), distanceType]
+        let share: Set<HKSampleType> = [HKObjectType.workoutType(), HKSeriesType.workoutRoute(), distanceType, energyType]
         do {
             try await store.requestAuthorization(toShare: share, read: read)
         } catch {
@@ -163,7 +164,11 @@ final class HealthKitManager: ObservableObject {
         try await builder.beginCollection(at: activity.start)
         let distance = HKQuantitySample(type: distanceType, quantity: HKQuantity(unit: .meter(), doubleValue: activity.distanceMeters),
                                         start: activity.start, end: activity.end)
-        try await builder.addSamples([distance])
+        // Active energy is what credits the Move ring.
+        let calories = HKQuantitySample(type: energyType,
+                                        quantity: HKQuantity(unit: .kilocalorie(), doubleValue: DifficultyEngine.activeCalories(activity)),
+                                        start: activity.start, end: activity.end)
+        try await builder.addSamples([distance, calories])
 
         var metadata: [String: Any] = [
             HKMetadataKeyElevationAscended: HKQuantity(unit: .meter(), doubleValue: activity.elevationGainMeters),

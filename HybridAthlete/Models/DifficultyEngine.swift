@@ -22,6 +22,18 @@ enum DifficultyEngine {
         return 3.5 + net * loadFactor
     }
 
+    /// Active calories from the same ACSM demand: net O2 cost (above resting) × body mass × time, at ~5 kcal per litre of O2.
+    static func activeCalories(_ activity: Activity) -> Double {
+        let phys = activity.physiology ?? Physiology()
+        guard activity.movingSeconds > 0, activity.distanceMeters > 0 else { return 0 }
+        let speed = activity.averageSpeed
+        let vo2 = vo2Demand(speedMps: speed, grade: activity.elevationGainMeters / activity.distanceMeters,
+                            running: isRunning(type: activity.type, speedMps: speed), bodyMassKg: phys.bodyMassKg,
+                            loadKg: (activity.ruckWeightLbs ?? 0) * Format.kgPerLb)
+        let litersO2 = (vo2 - 3.5) * phys.bodyMassKg * (activity.movingSeconds / 60) / 1000
+        return max(0, litersO2 * 5)
+    }
+
     static func isRunning(type: ActivityType, speedMps: Double) -> Bool {
         type == .run || speedMps > 2.2
     }

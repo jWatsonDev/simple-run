@@ -276,14 +276,13 @@ private struct StatGrid: View {
             StatTile(label: "Time", value: Format.duration(a.movingSeconds), unit: nil)
             StatTile(label: "Avg pace", value: Format.pace(distanceMeters: a.distanceMeters, seconds: a.movingSeconds), unit: "/mi")
             StatTile(label: "Climb", value: "\(Int((a.elevationGainMeters * Format.feetPerMeter).rounded()))", unit: "ft")
+            StatTile(label: "Calories", value: "\(Int(DifficultyEngine.activeCalories(a).rounded()))", unit: "kcal")
             if let hr = a.heartRate {
                 StatTile(label: "Avg HR", value: "\(Int(hr.average))", unit: "bpm")
-                StatTile(label: "Max HR", value: "\(Int(hr.max))", unit: "bpm")
             } else if let lbs = a.ruckWeightLbs {
                 StatTile(label: "Ruck", value: "\(Int(lbs))", unit: "lb")
-            }
-            if a.heartRate != nil, let lbs = a.ruckWeightLbs {
-                StatTile(label: "Ruck", value: "\(Int(lbs))", unit: "lb")
+            } else {
+                StatTile(label: "Moving", value: Format.hoursMinutes(a.movingSeconds), unit: nil)
             }
         }
     }

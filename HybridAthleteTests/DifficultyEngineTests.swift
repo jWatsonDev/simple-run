@@ -92,6 +92,19 @@ final class DifficultyEngineTests: XCTestCase {
         XCTAssertNil(DifficultyEngine.fitBaseline(points: [(20, 130), (25, 140)], physiology: phys))
     }
 
+    /// Net running cost is ~1 kcal per kg per km (ACSM: 0.2 ml O2/kg/m at ~5 kcal/L), roughly independent of pace.
+    func testActiveCaloriesAreRealistic() {
+        let run = DifficultyEngine.activeCalories(activity(.run, miles: 3, minutes: 30))
+        let expected = 1.0 * 82 * (3 * Format.metersPerMile / 1000)
+        XCTAssertEqual(run, expected, accuracy: expected * 0.15)
+
+        let walk = DifficultyEngine.activeCalories(activity(.walk, miles: 3, minutes: 54))
+        let ruck = DifficultyEngine.activeCalories(activity(.ruck, miles: 3, minutes: 54, ruckLbs: 40))
+        XCTAssertLessThan(walk, run)
+        XCTAssertGreaterThan(ruck, walk * 1.15)
+        XCTAssertEqual(DifficultyEngine.activeCalories(activity(.run, miles: 0, minutes: 0)), 0)
+    }
+
     func testScoreStaysInRange() {
         let huge = DifficultyEngine.evaluate(activity(.ruck, miles: 20, minutes: 400, climbFt: 5000, ruckLbs: 80))
         XCTAssertLessThanOrEqual(huge.score, 10)

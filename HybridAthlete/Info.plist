@@ -25,7 +25,7 @@
 	<key>NSHealthShareUsageDescription</key>
 	<string>Ruck &amp; Run reads your heart rate, sleep, resting heart rate, HRV, VO2 max, body weight, logged drinks and past workouts to rate how hard each session was and explain why.</string>
 	<key>NSHealthUpdateUsageDescription</key>
-	<string>Ruck &amp; Run saves your runs, walks and rucks to Apple Health, including the route.</string>
+	<string>Ruck &amp; Run saves your runs, walks and rucks to Apple Health, including the route and active calories so they count toward your Move ring.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>Ruck &amp; Run uses your location to track distance, pace and route during a run, walk or ruck, including while your screen is locked.</string>
 	<key>NSMotionUsageDescription</key>

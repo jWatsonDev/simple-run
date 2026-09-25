@@ -23,7 +23,7 @@ targets:
         NSLocationWhenInUseUsageDescription: "Ruck & Run uses your location to track distance, pace and route during a run, walk or ruck, including while your screen is locked."
         NSMotionUsageDescription: "Ruck & Run uses the barometer to measure how much you climbed."
         NSHealthShareUsageDescription: "Ruck & Run reads your heart rate, sleep, resting heart rate, HRV, VO2 max, body weight, logged drinks and past workouts to rate how hard each session was and explain why."
-        NSHealthUpdateUsageDescription: "Ruck & Run saves your runs, walks and rucks to Apple Health, including the route."
+        NSHealthUpdateUsageDescription: "Ruck & Run saves your runs, walks and rucks to Apple Health, including the route and active calories so they count toward your Move ring."
     entitlements:
       path: HybridAthlete/HybridAthlete.entitlements
       properties:
@@ -33,7 +33,7 @@ targets:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.jwatsondev.simplerun
         MARKETING_VERSION: "1.0.0"
-        CURRENT_PROJECT_VERSION: "15"
+        CURRENT_PROJECT_VERSION: "16"
         ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
         DEVELOPMENT_TEAM: 6TMKWLMV2K
         SWIFT_VERSION: "5.0"
