@@ -20,6 +20,8 @@
 	<string>1.0</string>
 	<key>CFBundleVersion</key>
 	<string>1</string>
+	<key>ITSAppUsesNonExemptEncryption</key>
+	<false/>
 	<key>NSHealthShareUsageDescription</key>
 	<string>Ruck &amp; Run reads your heart rate, sleep, resting heart rate, HRV, VO2 max, body weight, logged drinks and past workouts to rate how hard each session was and explain why.</string>
 	<key>NSHealthUpdateUsageDescription</key>

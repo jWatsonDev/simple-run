@@ -17,6 +17,7 @@ targets:
         CFBundleShortVersionString: "1.0"
         CFBundleVersion: "1"
         UILaunchScreen: {}
+        ITSAppUsesNonExemptEncryption: false
         UISupportedInterfaceOrientations: [UIInterfaceOrientationPortrait]
         UIBackgroundModes: [location]
         NSLocationWhenInUseUsageDescription: "Ruck & Run uses your location to track distance, pace and route during a run, walk or ruck, including while your screen is locked."
