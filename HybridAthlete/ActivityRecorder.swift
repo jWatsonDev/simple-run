@@ -26,6 +26,7 @@ final class ActivityRecorder: ObservableObject {
     private let altimeter = CMAltimeter()
     private let useBarometer = CMAltimeter.isRelativeAltitudeAvailable()
     private var altitudeAnchor: Double?
+    private var latestRelativeAltitude: Double?
 
     private var accumulatedSeconds: TimeInterval = 0
     private var segmentStart: Date?
@@ -43,6 +44,7 @@ final class ActivityRecorder: ObservableObject {
         distanceMeters = 0
         elevationGainMeters = 0
         route = []
+        latestRelativeAltitude = nil
         accumulatedSeconds = 0
         movingSeconds = 0
         startDate = Date()
@@ -61,7 +63,10 @@ final class ActivityRecorder: ObservableObject {
         if useBarometer {
             altimeter.startRelativeAltitudeUpdates(to: .main) { [weak self] data, _ in
                 guard let altitude = data?.relativeAltitude.doubleValue else { return }
-                MainActor.assumeIsolated { self?.handleAltitude(altitude, threshold: 1) }
+                MainActor.assumeIsolated {
+                    self?.latestRelativeAltitude = altitude
+                    self?.handleAltitude(altitude, threshold: 1)
+                }
             }
         }
         resume()
@@ -135,7 +140,8 @@ final class ActivityRecorder: ObservableObject {
         }
         lastLocation = location
         route.append(RoutePoint(latitude: location.coordinate.latitude, longitude: location.coordinate.longitude,
-                                altitude: location.altitude, timestamp: location.timestamp))
+                                altitude: location.altitude, timestamp: location.timestamp,
+                                relativeAltitude: latestRelativeAltitude))
 
         if !useBarometer, location.verticalAccuracy >= 0, location.verticalAccuracy <= 15 {
             handleAltitude(location.altitude, threshold: 3)

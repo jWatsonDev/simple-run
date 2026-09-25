@@ -28,8 +28,15 @@ struct RoutePoint: Codable, Hashable {
     var longitude: Double
     var altitude: Double
     var timestamp: Date
+    /// Barometric altitude relative to the start, when the device has a barometer. Much smoother than GPS altitude.
+    var relativeAltitude: Double?
 
     var coordinate: CLLocationCoordinate2D { .init(latitude: latitude, longitude: longitude) }
+}
+
+struct HRSample: Codable, Hashable {
+    var date: Date
+    var bpm: Double
 }
 
 struct HeartRateSummary: Codable, Hashable {
@@ -111,6 +118,7 @@ struct Activity: Codable, Identifiable, Hashable {
     var route: [RoutePoint]
 
     var heartRate: HeartRateSummary?
+    var heartRateSamples: [HRSample]?
     var recovery: RecoveryContext?
     var physiology: Physiology?
     var baseline: Baseline?

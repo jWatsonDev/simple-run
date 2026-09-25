@@ -15,6 +15,11 @@ final class ActivityStore: ObservableObject {
            let saved = try? JSONDecoder().decode([Activity].self, from: data) {
             activities = saved
         }
+        #if DEBUG
+        if ProcessInfo.processInfo.arguments.contains("-demoActivity") {
+            activities = [DemoData.run()]
+        }
+        #endif
     }
 
     func activity(id: UUID) -> Activity? {
@@ -35,13 +40,19 @@ final class ActivityStore: ObservableObject {
 
         let (start, end) = (a.start, a.end)
         let physiology = await health.physiology(before: start)
-        async let heartRate = health.heartRate(from: start, to: end)
+        async let heartRateSamples = health.heartRateSamples(from: start, to: end)
         async let recovery = health.recoveryContext(before: start)
         async let baseline = health.baseline(before: start, physiology: physiology)
         async let watchWorkout = health.hasOverlappingWorkout(from: start, to: end)
 
         a.physiology = physiology
-        a.heartRate = await heartRate
+        let samples = await heartRateSamples
+        a.heartRateSamples = samples.isEmpty ? nil : samples
+        a.heartRate = samples.isEmpty ? nil : HeartRateSummary(
+            average: samples.map(\.bpm).reduce(0, +) / Double(samples.count),
+            max: samples.map(\.bpm).max() ?? 0,
+            sampleCount: samples.count
+        )
         a.recovery = await recovery
         a.baseline = await baseline
         a.watchWorkoutFound = await watchWorkout

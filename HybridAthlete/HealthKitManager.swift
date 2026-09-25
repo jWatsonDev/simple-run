@@ -38,10 +38,12 @@ final class HealthKitManager: ObservableObject {
 
     // MARK: - Heart rate during an activity
 
-    func heartRate(from start: Date, to end: Date) async -> HeartRateSummary? {
-        let values = await quantities(heartRateType, unit: bpm, from: start, to: end)
-        guard !values.isEmpty else { return nil }
-        return HeartRateSummary(average: values.reduce(0, +) / Double(values.count), max: values.max() ?? 0, sampleCount: values.count)
+    func heartRateSamples(from start: Date, to end: Date) async -> [HRSample] {
+        let predicate = HKQuery.predicateForSamples(withStart: start, end: end)
+        let descriptor = HKSampleQueryDescriptor(predicates: [.quantitySample(type: heartRateType, predicate: predicate)],
+                                                 sortDescriptors: [SortDescriptor(\.startDate)])
+        let samples = (try? await descriptor.result(for: store)) ?? []
+        return samples.map { HRSample(date: $0.startDate, bpm: $0.quantity.doubleValue(for: bpm)) }
     }
 
     // MARK: - Recovery going into an activity

@@ -8,7 +8,10 @@
 
 /* Begin PBXBuildFile section */
 		04F193199C373E5D326585BD /* ActivityStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36CE2C492C85B86A700DC0E5 /* ActivityStore.swift */; };
+		14ADCCB469B06B7F8D27A4F6 /* ActivityChartsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6316400ADF04F92540322131 /* ActivityChartsTests.swift */; };
 		2020AA5BCF301BE126DDA624 /* HealthKitManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F22B3BA9543F8D9C0082120A /* HealthKitManager.swift */; };
+		2F68747104EF17FC0F27D1F4 /* Theme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6CA7EC4BC8B890D162417B9B /* Theme.swift */; };
+		4B550AEBBA5848FAE02E8604 /* DetailScreenshotUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC1897C7E5C6E771F5A14003 /* DetailScreenshotUITests.swift */; };
 		5422BFD8E322A6CA29BF44EE /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC4D8A57E79F6F3B7000BD96 /* HomeView.swift */; };
 		5FAD55985BF002AF00824D81 /* ActivityRecorder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63FDDC9D13E78675A9750660 /* ActivityRecorder.swift */; };
 		6338813615383283AF7F7E6D /* ActivityDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 80870564E02268F8173F8780 /* ActivityDetailView.swift */; };
@@ -19,7 +22,10 @@
 		AA40DD84BF8506DE85BBA80B /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 702AA756BEB0BDC0E1748CD3 /* Assets.xcassets */; };
 		BBC775AB0DDDB7B0810B5A6A /* Activity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9FAF2765B802EBD97B87B924 /* Activity.swift */; };
 		BDEAAC1A3962B1A18E497E50 /* RecordingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BF7B37E04D083C82371067C /* RecordingView.swift */; };
+		C135A10CB08633802BA8DB62 /* ActivityCharts.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BAE23CC76410CFC6A1877C7 /* ActivityCharts.swift */; };
+		C21FA92467A8F82AB1E91A31 /* ActivityChartViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD3BECC6CAEF0188E52CE1D8 /* ActivityChartViews.swift */; };
 		F5E65283910DF563FB833E85 /* DifficultyEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 646922885D9E5B101B05FCC8 /* DifficultyEngine.swift */; };
+		FCFFA42371D01243BB72E8A6 /* DemoData.swift in Sources */ = {isa = PBXBuildFile; fileRef = D63F9A3FE3C8EDF8DECA78F2 /* DemoData.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -46,16 +52,22 @@
 		36CE2C492C85B86A700DC0E5 /* ActivityStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityStore.swift; sourceTree = "<group>"; };
 		3C468341F4EBCE96A2798BA1 /* HybridAthleteUITests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = HybridAthleteUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		5BE05F1C631C21E85F131DBE /* HybridAthlete.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = HybridAthlete.entitlements; sourceTree = "<group>"; };
+		6316400ADF04F92540322131 /* ActivityChartsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityChartsTests.swift; sourceTree = "<group>"; };
 		63FDDC9D13E78675A9750660 /* ActivityRecorder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityRecorder.swift; sourceTree = "<group>"; };
 		646922885D9E5B101B05FCC8 /* DifficultyEngine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DifficultyEngine.swift; sourceTree = "<group>"; };
+		6CA7EC4BC8B890D162417B9B /* Theme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Theme.swift; sourceTree = "<group>"; };
 		6CB45D5DBECEEE1FDB31FD81 /* HybridAthleteApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HybridAthleteApp.swift; sourceTree = "<group>"; };
 		6D9E57BC0F7634E7B0060EC6 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		6E52BF8C6E7FC3A1257ACF87 /* HybridAthlete.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = HybridAthlete.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		702AA756BEB0BDC0E1748CD3 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		7BF7B37E04D083C82371067C /* RecordingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecordingView.swift; sourceTree = "<group>"; };
 		80870564E02268F8173F8780 /* ActivityDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityDetailView.swift; sourceTree = "<group>"; };
+		9BAE23CC76410CFC6A1877C7 /* ActivityCharts.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityCharts.swift; sourceTree = "<group>"; };
 		9FAF2765B802EBD97B87B924 /* Activity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Activity.swift; sourceTree = "<group>"; };
+		AC1897C7E5C6E771F5A14003 /* DetailScreenshotUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailScreenshotUITests.swift; sourceTree = "<group>"; };
 		AC4D8A57E79F6F3B7000BD96 /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
+		BD3BECC6CAEF0188E52CE1D8 /* ActivityChartViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityChartViews.swift; sourceTree = "<group>"; };
+		D63F9A3FE3C8EDF8DECA78F2 /* DemoData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DemoData.swift; sourceTree = "<group>"; };
 		E6C3070F7F109B3ECA28CBAB /* FlowUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlowUITests.swift; sourceTree = "<group>"; };
 		F22B3BA9543F8D9C0082120A /* HealthKitManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HealthKitManager.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -67,6 +79,7 @@
 				63FDDC9D13E78675A9750660 /* ActivityRecorder.swift */,
 				36CE2C492C85B86A700DC0E5 /* ActivityStore.swift */,
 				702AA756BEB0BDC0E1748CD3 /* Assets.xcassets */,
+				D63F9A3FE3C8EDF8DECA78F2 /* DemoData.swift */,
 				F22B3BA9543F8D9C0082120A /* HealthKitManager.swift */,
 				5BE05F1C631C21E85F131DBE /* HybridAthlete.entitlements */,
 				6CB45D5DBECEEE1FDB31FD81 /* HybridAthleteApp.swift */,
@@ -90,9 +103,11 @@
 		77F619B46AA7E567ADEB11C3 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				BD3BECC6CAEF0188E52CE1D8 /* ActivityChartViews.swift */,
 				80870564E02268F8173F8780 /* ActivityDetailView.swift */,
 				AC4D8A57E79F6F3B7000BD96 /* HomeView.swift */,
 				7BF7B37E04D083C82371067C /* RecordingView.swift */,
+				6CA7EC4BC8B890D162417B9B /* Theme.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -110,6 +125,7 @@
 		A3B4BBE6924CD29A79616B43 /* HybridAthleteTests */ = {
 			isa = PBXGroup;
 			children = (
+				6316400ADF04F92540322131 /* ActivityChartsTests.swift */,
 				271651D29E458413D55B43D7 /* DifficultyEngineTests.swift */,
 			);
 			path = HybridAthleteTests;
@@ -119,6 +135,7 @@
 			isa = PBXGroup;
 			children = (
 				9FAF2765B802EBD97B87B924 /* Activity.swift */,
+				9BAE23CC76410CFC6A1877C7 /* ActivityCharts.swift */,
 				646922885D9E5B101B05FCC8 /* DifficultyEngine.swift */,
 				2EF715DAB365D89A3B3C5A9C /* Format.swift */,
 			);
@@ -128,6 +145,7 @@
 		EB72E1804DD6B345297FC5AE /* HybridAthleteUITests */ = {
 			isa = PBXGroup;
 			children = (
+				AC1897C7E5C6E771F5A14003 /* DetailScreenshotUITests.swift */,
 				E6C3070F7F109B3ECA28CBAB /* FlowUITests.swift */,
 			);
 			path = HybridAthleteUITests;
@@ -249,6 +267,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				14ADCCB469B06B7F8D27A4F6 /* ActivityChartsTests.swift in Sources */,
 				72AFFD721C47DE9C9810F7FC /* DifficultyEngineTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -257,6 +276,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4B550AEBBA5848FAE02E8604 /* DetailScreenshotUITests.swift in Sources */,
 				7170D5915C34A3154BA9905B /* FlowUITests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -266,15 +286,19 @@
 			buildActionMask = 2147483647;
 			files = (
 				BBC775AB0DDDB7B0810B5A6A /* Activity.swift in Sources */,
+				C21FA92467A8F82AB1E91A31 /* ActivityChartViews.swift in Sources */,
+				C135A10CB08633802BA8DB62 /* ActivityCharts.swift in Sources */,
 				6338813615383283AF7F7E6D /* ActivityDetailView.swift in Sources */,
 				5FAD55985BF002AF00824D81 /* ActivityRecorder.swift in Sources */,
 				04F193199C373E5D326585BD /* ActivityStore.swift in Sources */,
+				FCFFA42371D01243BB72E8A6 /* DemoData.swift in Sources */,
 				F5E65283910DF563FB833E85 /* DifficultyEngine.swift in Sources */,
 				AA1830ADF00562118458F5CA /* Format.swift in Sources */,
 				2020AA5BCF301BE126DDA624 /* HealthKitManager.swift in Sources */,
 				5422BFD8E322A6CA29BF44EE /* HomeView.swift in Sources */,
 				9E7057A18B35CD080075060D /* HybridAthleteApp.swift in Sources */,
 				BDEAAC1A3962B1A18E497E50 /* RecordingView.swift in Sources */,
+				2F68747104EF17FC0F27D1F4 /* Theme.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

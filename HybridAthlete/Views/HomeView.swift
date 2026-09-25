@@ -110,7 +110,7 @@ struct ActivityRow: View {
             }
             Spacer()
             if let difficulty = activity.difficulty {
-                ScoreBadge(score: difficulty.score, size: 44)
+                ScoreRing(score: difficulty.score, size: 44, lineWidth: 5)
             } else if analyzing {
                 ProgressView()
             }
