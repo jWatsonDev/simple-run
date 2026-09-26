@@ -5,38 +5,50 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Ruck & Run — Support</title>
   <style>
-    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; max-width: 640px; margin: 60px auto; padding: 0 24px; color: #111; }
+    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; max-width: 640px; margin: 60px auto; padding: 0 24px; color: #111; line-height: 1.5; }
     h1 { font-size: 28px; color: #FF6B35; }
     h2 { font-size: 18px; margin-top: 32px; }
+    h3 { font-size: 16px; margin: 24px 0 4px; }
+    p { margin: 4px 0 12px; }
     a { color: #FF6B35; }
     footer { margin-top: 60px; font-size: 13px; color: #aaa; }
   </style>
 </head>
 <body>
   <h1>Ruck & Run</h1>
-  <p>A minimal GPS activity tracker for iPhone. Track a run, walk, or ruck — watch your route draw on the map and review your history.</p>
+  <p>A simple run, walk, and ruck tracker that tells you how hard each session really was — and why.</p>
 
   <h2>Getting Started</h2>
-  <p>Choose your activity (Run, Walk, or Ruck) on the main screen, then tap <strong>Start</strong>. Allow location access when prompted — Ruck & Run uses your GPS to track distance and draw your route. Tap <strong>Finish</strong> when done. Your activity is saved automatically.</p>
+  <p>Pick <strong>Run</strong>, <strong>Walk</strong>, or <strong>Ruck</strong> (set your ruck weight), then tap <strong>Start</strong>. Allow location access and Apple Health when asked. Tap <strong>Finish</strong> when you're done and confirm <strong>End &amp; Save</strong>. You'll get a difficulty score from 1 to 10, the reasons behind it, and charts for your splits, elevation, and heart rate.</p>
 
   <h2>Frequently Asked Questions</h2>
-  <p><strong>Why does the app need location access?</strong><br />
-  Ruck & Run uses GPS to calculate distance, pace, and draw your route on the map. Location data never leaves your device.</p>
 
-  <p><strong>Does the app sync with Apple Health?</strong><br />
-  No. Ruck & Run does not integrate with Apple Health or HealthKit. All data is stored on-device only.</p>
+  <h3>How is the difficulty score calculated?</h3>
+  <p>It combines your pace, hills, ruck weight, and duration. When heart rate is available from your Apple Watch, the score is based on how hard your body actually worked, compared with your own normal from past workouts. The explanation also looks at last night's sleep, resting heart rate, HRV, and any notes you add.</p>
 
-  <p><strong>Where is my activity data stored?</strong><br />
-  All history is stored locally on your device. Ruck & Run does not use any servers or cloud storage.</p>
+  <h3>How do I get heart rate?</h3>
+  <p>Wear your Apple Watch and start an Outdoor Run or Walk in the Watch's Workout app along with Ruck & Run. The app reads the heart rate from Apple Health when you finish. Without a workout running on the Watch, heart rate is only sampled every few minutes and the score is estimated from pace, hills, and weight.</p>
 
-  <p><strong>The map isn't showing my location. What do I do?</strong><br />
-  Go to Settings → Privacy & Security → Location Services → Ruck & Run and set it to "While Using the App".</p>
+  <h3>Does it work with Apple Health?</h3>
+  <p>Yes. With your permission it reads heart rate, sleep, resting heart rate, HRV, VO2 max, body weight, and past workouts, and saves your activities as workouts with route and estimated active calories, so they count toward your Move ring. Manage access in the Health app under Sharing → Apps → Ruck & Run.</p>
 
-  <p><strong>Why does the app need background location?</strong><br />
-  GPS tracking continues when your screen locks during an activity. Without background location, your route and distance would stop recording the moment your screen turns off.</p>
+  <h3>How do voice updates work?</h3>
+  <p>By default the app announces your distance, time, and average pace every half mile, lowering your music while it speaks. Change the interval or turn it off with <strong>Voice updates</strong> on the main screen.</p>
+
+  <h3>Can I see my run on the Lock Screen?</h3>
+  <p>Yes. Time, distance, and pace appear on the Lock Screen and in the Dynamic Island while you're tracking. If you don't see them, go to Settings → Ruck & Run and turn on Live Activities.</p>
+
+  <h3>Where is my data stored?</h3>
+  <p>On your iPhone only. Ruck & Run has no servers and no account. Deleting the app deletes your history, except workouts already saved to Apple Health. See the <a href="/simple-run/privacy">Privacy Policy</a>.</p>
+
+  <h3>The map isn't showing my location. What do I do?</h3>
+  <p>Go to Settings → Privacy &amp; Security → Location Services → Ruck & Run and choose "While Using the App".</p>
+
+  <h3>Why does the app keep tracking when my screen is locked?</h3>
+  <p>GPS continues in the background during an activity you started, so your distance and route stay accurate while your phone is in your pocket. Tracking stops as soon as you end the activity.</p>
 
   <h2>Contact</h2>
-  <p>Have a question or found a bug? Email us at <a href="mailto:support@jwatsondev.com">support@jwatsondev.com</a></p>
+  <p>Have a question or found a bug? Email <a href="mailto:watson.jay@outlook.com">watson.jay@outlook.com</a></p>
 
   <footer>
     <a href="/simple-run/privacy">Privacy Policy</a> &nbsp;·&nbsp; &copy; 2026 Ruck & Run
