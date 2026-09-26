@@ -39,17 +39,44 @@ final class FlowUITests: XCTestCase {
 
         app.buttons["Start Run"].tap()
         XCTAssertTrue(app.buttons["Finish"].waitForExistence(timeout: 5))
-        sleep(25)
+        sleep(20)
         shot("2-recording")
 
-        app.buttons["Finish"].tap()
-        app.buttons["Finish & Save"].firstMatch.tap()
-
-        XCTAssertTrue(app.staticTexts["Drinks last night?"].waitForExistence(timeout: 20))
-        shot("3-result")
-        app.buttons["3+"].tap()
+        // Live Activity: Dynamic Island from the home screen, then the Lock Screen.
+        XCUIDevice.shared.press(.home)
+        sleep(3)
+        shot("2b-dynamic-island")
+        XCUIDevice.shared.perform(NSSelectorFromString("pressLockButton"))
+        sleep(2)
+        XCUIDevice.shared.press(.home) // wake to the Lock Screen
+        sleep(3)
+        shot("2c-lock-screen")
+        XCUIDevice.shared.perform(NSSelectorFromString("pressLockButton"))
         sleep(1)
-        shot("4-result-after-drinks")
+        app.activate()
+        _ = app.buttons["Finish"].waitForExistence(timeout: 10)
+        if !app.buttons["Finish"].isHittable {
+            // Still on the Lock Screen — swipe up to unlock (simulator has no passcode).
+            springboard.swipeUp()
+            app.activate()
+        }
+        XCTAssertTrue(app.buttons["Finish"].waitForExistence(timeout: 10))
+
+        app.buttons["Finish"].tap()
+        XCTAssertTrue(app.alerts.buttons["End & Save"].waitForExistence(timeout: 5))
+        shot("3-end-confirm")
+        app.alerts.buttons["End & Save"].tap()
+
+        XCTAssertTrue(app.buttons["Add notes"].waitForExistence(timeout: 20))
+        shot("4-result-notes-prompt")
+        app.buttons["Add notes"].tap()
+        app.buttons["Rough"].tap()
+        app.buttons["3+"].tap()
+        app.buttons["Skipped a meal"].tap()
+        shot("5-notes-sheet")
+        app.buttons["Save"].tap()
+        sleep(1)
+        shot("6-result-after-notes")
     }
 
     private func shot(_ name: String) {

@@ -9,6 +9,13 @@ enum Format {
         String(format: "%.2f", meters / metersPerMile)
     }
 
+    /// 0.5 → "0.5", 1.0 → "1", 2.25 → "2.25".
+    static func trimmed(_ value: Double) -> String {
+        String(format: "%.2f", value)
+            .replacingOccurrences(of: "0+$", with: "", options: .regularExpression)
+            .replacingOccurrences(of: "\\.$", with: "", options: .regularExpression)
+    }
+
     static func feet(_ meters: Double) -> String {
         "\(Int((meters * feetPerMeter).rounded())) ft"
     }

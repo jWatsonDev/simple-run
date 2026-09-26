@@ -105,6 +105,37 @@ final class DifficultyEngineTests: XCTestCase {
         XCTAssertEqual(DifficultyEngine.activeCalories(activity(.run, miles: 0, minutes: 0)), 0)
     }
 
+    func testNotesAddToTheStoryNotTheScore() {
+        var a = activity(.run, miles: 3, minutes: 30)
+        let before = DifficultyEngine.evaluate(a)
+        a.sleepAnswer = .rough
+        a.fuelAnswer = .skipped
+        let after = DifficultyEngine.evaluate(a)
+        XCTAssertEqual(before.score, after.score)
+        XCTAssertTrue(after.recoveryFactors.contains { $0.text == "You said you slept rough" })
+        XCTAssertTrue(after.recoveryFactors.contains { $0.text.hasPrefix("Skipped a meal") })
+        XCTAssertEqual(after.headline, "Got it done despite a rough night and an empty tank.")
+    }
+
+    func testManualRoughSleepDefersToHealthShortSleep() {
+        var a = activity(.run, miles: 3, minutes: 30)
+        a.recovery = RecoveryContext(sleepHours: 5, typicalSleepHours: 7)
+        a.sleepAnswer = .rough
+        let r = DifficultyEngine.evaluate(a)
+        XCTAssertEqual(r.recoveryFactors.filter { $0.text.contains("slept") || $0.text.contains("Slept") }.count, 1)
+    }
+
+    func testOlderSavedActivitiesStillDecode() throws {
+        // Shape of an activity saved before notes existed.
+        let json = """
+        {"id":"8C5E0B55-3C3C-4E0B-9D5B-1B7A2B0E2C11","type":"run","start":0,"end":1800,"movingSeconds":1800,
+         "distanceMeters":4828,"elevationGainMeters":10,"route":[],"savedToHealth":true,"watchWorkoutFound":false}
+        """
+        let a = try JSONDecoder().decode(Activity.self, from: Data(json.utf8))
+        XCTAssertNil(a.sleepAnswer)
+        XCTAssertFalse(a.hasNotes)
+    }
+
     func testScoreStaysInRange() {
         let huge = DifficultyEngine.evaluate(activity(.ruck, miles: 20, minutes: 400, climbFt: 5000, ruckLbs: 80))
         XCTAssertLessThanOrEqual(huge.score, 10)

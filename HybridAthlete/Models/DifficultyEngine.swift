@@ -171,6 +171,16 @@ enum DifficultyEngine {
                 }
             }
         }
+        // What the user told us. Health's sleep data wins when it already flagged short sleep.
+        switch activity.sleepAnswer {
+        case .rough where !causes.contains("short sleep"):
+            recovery.append(.init(text: "You said you slept rough", tone: .harder))
+            causes.append("a rough night")
+        case .great where !recovery.contains(where: { $0.text.hasPrefix("Slept ") }):
+            recovery.append(.init(text: "You said you slept great", tone: .easier))
+        default:
+            break
+        }
         switch drinks(activity) {
         case .oneOrTwo:
             recovery.append(.init(text: "A drink or two last night", tone: .harder))
@@ -178,6 +188,18 @@ enum DifficultyEngine {
         case .threePlus:
             recovery.append(.init(text: "3+ drinks last night", tone: .harder))
             causes.append("the drinks last night")
+        default:
+            break
+        }
+        switch activity.fuelAnswer {
+        case .skipped:
+            recovery.append(.init(text: "Skipped a meal — running on empty", tone: .harder))
+            causes.append("an empty tank")
+        case .junk:
+            recovery.append(.init(text: "Junk food yesterday", tone: .harder))
+            causes.append("junk food")
+        case .fueled:
+            recovery.append(.init(text: "Fueled well", tone: .easier))
         default:
             break
         }

@@ -8,6 +8,7 @@ struct RecordingView: View {
 
     @State private var camera: MapCameraPosition = .userLocation(fallback: .automatic)
     @State private var confirmingFinish = false
+    @State private var confirmingDiscard = false
 
     var body: some View {
         VStack(spacing: 0) {
@@ -71,13 +72,21 @@ struct RecordingView: View {
             .padding(20)
             .background(.bar)
         }
-        .confirmationDialog("Finish \(recorder.type.title.lowercased())?", isPresented: $confirmingFinish, titleVisibility: .visible) {
-            Button("Finish & Save") { onFinish(recorder.finish()) }
+        .alert("End \(recorder.type.title.lowercased())?", isPresented: $confirmingFinish) {
+            Button("End & Save") { onFinish(recorder.finish()) }
+            Button("Keep Going", role: .cancel) {}
+            Button("Discard…", role: .destructive) { confirmingDiscard = true }
+        } message: {
+            Text("\(Format.miles(recorder.distanceMeters)) mi in \(Format.duration(recorder.movingSeconds)).")
+        }
+        .alert("Discard this \(recorder.type.title.lowercased())?", isPresented: $confirmingDiscard) {
             Button("Discard", role: .destructive) {
                 recorder.discard()
                 onFinish(nil)
             }
-            Button("Keep Going", role: .cancel) {}
+            Button("Keep It", role: .cancel) { confirmingFinish = true }
+        } message: {
+            Text("It won't be saved anywhere. This can't be undone.")
         }
     }
 

@@ -7,6 +7,7 @@ struct HomeView: View {
 
     @AppStorage("activityType") private var type: ActivityType = .run
     @AppStorage("ruckWeightLbs") private var ruckWeight: Double = 30
+    @AppStorage(Announcer.intervalKey) private var announceEvery: Double = Announcer.defaultInterval
 
     @State private var today: RecoveryContext?
     @State private var recording = false
@@ -32,6 +33,12 @@ struct HomeView: View {
                         Stepper(value: $ruckWeight, in: 5...150, step: 5) {
                             LabeledContent("Ruck weight", value: "\(Int(ruckWeight)) lb")
                         }
+                    }
+
+                    Picker(selection: $announceEvery) {
+                        ForEach(Announcer.intervals, id: \.self) { Text(Announcer.label(for: $0)).tag($0) }
+                    } label: {
+                        Label("Voice updates", systemImage: "speaker.wave.2.fill")
                     }
 
                     Button {

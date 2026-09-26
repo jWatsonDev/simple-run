@@ -5,8 +5,9 @@ struct ActivityDetailView: View {
     @EnvironmentObject private var store: ActivityStore
     let id: UUID
 
-    @State private var shareImage: UIImage?
+    @State private var shareImages: ShareCard.Images?
     @State private var renderingShare = false
+    @State private var editingNotes = false
 
     var body: some View {
         Group {
@@ -29,10 +30,17 @@ struct ActivityDetailView: View {
                 }
             }
         }
-        .sheet(isPresented: Binding(get: { shareImage != nil }, set: { if !$0 { shareImage = nil } })) {
-            if let shareImage {
-                ShareSheet(image: shareImage, title: "My \(store.activity(id: id)?.type.title.lowercased() ?? "run")")
+        .sheet(isPresented: Binding(get: { shareImages != nil }, set: { if !$0 { shareImages = nil } })) {
+            if let shareImages {
+                ShareSheet(images: shareImages, title: "My \(store.activity(id: id)?.type.title.lowercased() ?? "run")")
                     .presentationDetents([.large])
+            }
+        }
+        .sheet(isPresented: $editingNotes) {
+            if let a = store.activity(id: id) {
+                NotesSheet(activity: a) { sleep, drinks, fuel in
+                    store.setNotes(sleep: sleep, drinks: drinks, fuel: fuel, for: id)
+                }
             }
         }
     }
@@ -40,11 +48,12 @@ struct ActivityDetailView: View {
     private func share(_ a: Activity) {
         renderingShare = true
         Task {
-            shareImage = await ShareCard.render(a)
+            shareImages = await ShareCard.render(a)
             renderingShare = false
             #if DEBUG
-            if let dir = ProcessInfo.processInfo.environment["SHARE_CARD_DIR"], let png = shareImage?.pngData() {
-                try? png.write(to: URL(fileURLWithPath: dir).appendingPathComponent("share-card.png"))
+            if let dir = ProcessInfo.processInfo.environment["SHARE_CARD_DIR"], let images = shareImages {
+                try? images.detailed?.pngData()?.write(to: URL(fileURLWithPath: dir).appendingPathComponent("share-card.png"))
+                try? images.basic.pngData()?.write(to: URL(fileURLWithPath: dir).appendingPathComponent("share-card-basic.png"))
             }
             #endif
         }
@@ -59,8 +68,8 @@ struct ActivityDetailView: View {
             VStack(spacing: 14) {
                 HeroCard(activity: a, analyzing: store.analyzing.contains(a.id))
 
-                if a.difficulty != nil, a.drinksAnswer == nil, a.recovery?.drinksLogged == nil {
-                    DrinksCard { store.setDrinks($0, for: a.id) }
+                if a.difficulty != nil, !a.hasNotes, a.notesPromptDismissed != true {
+                    NotesPrompt(onAdd: { editingNotes = true }, onDismiss: { store.dismissNotesPrompt(for: a.id) })
                 }
 
                 StatGrid(activity: a)
@@ -79,6 +88,12 @@ struct ActivityDetailView: View {
                         VStack(alignment: .leading, spacing: 10) {
                             ForEach(d.effortFactors + d.recoveryFactors, id: \.self, content: FactorRow.init)
                         }
+                        notesButton(a)
+                    }
+                } else if a.difficulty != nil, a.hasNotes || a.notesPromptDismissed == true {
+                    Card(title: "Why it scored \(String(format: "%.1f", a.difficulty!.score))") {
+                        Text("Nothing stood out — a normal day.").font(.subheadline).foregroundStyle(.secondary)
+                        notesButton(a)
                     }
                 }
 
@@ -121,6 +136,15 @@ struct ActivityDetailView: View {
             .padding(.bottom, 24)
         }
         .navigationTitle(a.type.title)
+    }
+
+    private func notesButton(_ a: Activity) -> some View {
+        Button { editingNotes = true } label: {
+            Label(a.hasNotes ? "Edit your notes on last night" : "Add notes on sleep, drinks or food",
+                  systemImage: "square.and.pencil")
+                .font(.subheadline.weight(.semibold))
+        }
+        .padding(.top, 4)
     }
 
     @ViewBuilder
@@ -249,20 +273,34 @@ struct ScoreRing: View {
 
 // MARK: - Cards
 
-private struct DrinksCard: View {
-    let onAnswer: (DrinksAnswer) -> Void
+private struct NotesPrompt: View {
+    let onAdd: () -> Void
+    let onDismiss: () -> Void
 
     var body: some View {
-        Card(title: "Drinks last night?", subtitle: "Apple Health can't tell, so we ask. It changes the story, not the score.") {
-            HStack(spacing: 10) {
-                ForEach(DrinksAnswer.allCases) { answer in
-                    Button { onAnswer(answer) } label: {
-                        Text(answer.title).font(.headline).frame(maxWidth: .infinity).padding(.vertical, 6)
-                    }
+        HStack(alignment: .top, spacing: 12) {
+            Image(systemName: "moon.zzz.fill")
+                .font(.title3)
+                .foregroundStyle(.orange)
+            VStack(alignment: .leading, spacing: 8) {
+                Text("Want to tell me about last night?").font(.subheadline.weight(.semibold))
+                Text("Sleep, drinks, food — totally optional, but it sharpens the why.")
+                    .font(.footnote)
+                    .foregroundStyle(.secondary)
+                Button("Add notes", action: onAdd)
+                    .font(.subheadline.weight(.semibold))
                     .buttonStyle(.bordered)
-                }
+                    .controlSize(.small)
             }
+            Spacer(minLength: 0)
+            Button(action: onDismiss) {
+                Image(systemName: "xmark").font(.caption.weight(.bold)).foregroundStyle(.secondary)
+                    .padding(6)
+            }
+            .accessibilityLabel("No thanks")
         }
+        .padding(14)
+        .background(Color(.secondarySystemGroupedBackground), in: RoundedRectangle(cornerRadius: 20, style: .continuous))
     }
 }
 
@@ -282,7 +320,7 @@ private struct StatGrid: View {
             } else if let lbs = a.ruckWeightLbs {
                 StatTile(label: "Ruck", value: "\(Int(lbs))", unit: "lb")
             } else {
-                StatTile(label: "Moving", value: Format.hoursMinutes(a.movingSeconds), unit: nil)
+                StatTile(label: "Started", value: a.start.formatted(date: .omitted, time: .shortened), unit: nil)
             }
         }
     }

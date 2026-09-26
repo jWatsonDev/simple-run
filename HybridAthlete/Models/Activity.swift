@@ -71,6 +71,35 @@ enum DrinksAnswer: String, Codable, CaseIterable, Identifiable {
     }
 }
 
+enum SleepAnswer: String, Codable, CaseIterable, Identifiable {
+    case great, okay, rough
+
+    var id: String { rawValue }
+
+    var title: String {
+        switch self {
+        case .great: "Great"
+        case .okay: "Okay"
+        case .rough: "Rough"
+        }
+    }
+}
+
+enum FuelAnswer: String, Codable, CaseIterable, Identifiable {
+    case fueled, light, skipped, junk
+
+    var id: String { rawValue }
+
+    var title: String {
+        switch self {
+        case .fueled: "Ate well"
+        case .light: "Light"
+        case .skipped: "Skipped a meal"
+        case .junk: "Junk food"
+        }
+    }
+}
+
 /// Personal numbers used to scale effort. Snapshotted onto each activity so its score is reproducible.
 struct Physiology: Codable, Hashable {
     var bodyMassKg: Double = 82
@@ -123,9 +152,15 @@ struct Activity: Codable, Identifiable, Hashable {
     var physiology: Physiology?
     var baseline: Baseline?
     var drinksAnswer: DrinksAnswer?
+    // Optional notes the user can add after the fact. All optional so older saved activities still decode.
+    var sleepAnswer: SleepAnswer?
+    var fuelAnswer: FuelAnswer?
+    var notesPromptDismissed: Bool?
     var difficulty: DifficultyResult?
     var savedToHealth = false
     var watchWorkoutFound = false
 
     var averageSpeed: Double { movingSeconds > 0 ? distanceMeters / movingSeconds : 0 }
+
+    var hasNotes: Bool { sleepAnswer != nil || drinksAnswer != nil || fuelAnswer != nil }
 }

@@ -70,10 +70,18 @@ final class ActivityStore: ObservableObject {
         replace(a)
     }
 
-    func setDrinks(_ answer: DrinksAnswer, for id: UUID) {
+    func setNotes(sleep: SleepAnswer?, drinks: DrinksAnswer?, fuel: FuelAnswer?, for id: UUID) {
         guard var a = activity(id: id) else { return }
-        a.drinksAnswer = answer
+        a.sleepAnswer = sleep
+        a.drinksAnswer = drinks
+        a.fuelAnswer = fuel
         a.difficulty = DifficultyEngine.evaluate(a)
+        replace(a)
+    }
+
+    func dismissNotesPrompt(for id: UUID) {
+        guard var a = activity(id: id) else { return }
+        a.notesPromptDismissed = true
         replace(a)
     }
 

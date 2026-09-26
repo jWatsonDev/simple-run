@@ -7,10 +7,24 @@ enum ShareCard {
     static let scale: CGFloat = 3
     private static let mapSize = CGSize(width: 360, height: 430)
 
+    struct Images {
+        /// Score, headline and recovery story. nil until the activity has been scored.
+        let detailed: UIImage?
+        /// Just the run: map and stats, nothing personal.
+        let basic: UIImage
+    }
+
     @MainActor
-    static func render(_ activity: Activity) async -> UIImage? {
+    static func render(_ activity: Activity) async -> Images? {
         let map = await mapImage(activity.route)
-        let renderer = ImageRenderer(content: ShareCardView(activity: activity, map: map).environment(\.colorScheme, .dark))
+        let detailed = activity.difficulty == nil ? nil : image(ShareCardView(activity: activity, map: map))
+        guard let basic = image(BasicShareCardView(activity: activity, map: map)) else { return nil }
+        return Images(detailed: detailed, basic: basic)
+    }
+
+    @MainActor
+    private static func image(_ view: some View) -> UIImage? {
+        let renderer = ImageRenderer(content: view.environment(\.colorScheme, .dark))
         renderer.scale = scale
         renderer.proposedSize = ProposedViewSize(size)
         return renderer.uiImage
@@ -123,40 +137,95 @@ struct ShareCardView: View {
                 }
 
                 HStack(spacing: 0) {
-                    stat(Format.miles(activity.distanceMeters), "MILES")
-                    stat(Format.duration(activity.movingSeconds), "TIME")
-                    stat(Format.pace(distanceMeters: activity.distanceMeters, seconds: activity.movingSeconds), "PACE /MI")
+                    ShareStat(value: Format.miles(activity.distanceMeters), label: "MILES")
+                    ShareStat(value: Format.duration(activity.movingSeconds), label: "TIME")
+                    ShareStat(value: Format.pace(distanceMeters: activity.distanceMeters, seconds: activity.movingSeconds), label: "PACE /MI")
                     if let lbs = activity.ruckWeightLbs {
-                        stat("\(Int(lbs))", "LB RUCK")
+                        ShareStat(value: "\(Int(lbs))", label: "LB RUCK")
                     } else if let hr = activity.heartRate {
-                        stat("\(Int(hr.average))", "AVG HR")
+                        ShareStat(value: "\(Int(hr.average))", label: "AVG HR")
                     } else {
-                        stat("\(Int((activity.elevationGainMeters * Format.feetPerMeter).rounded()))", "FT CLIMB")
+                        ShareStat(value: "\(Int((activity.elevationGainMeters * Format.feetPerMeter).rounded()))", label: "FT CLIMB")
                     }
                 }
                 .padding(.top, 22)
                 .padding(.horizontal, 14)
 
-                Rectangle().fill(.white.opacity(0.18)).frame(height: 1)
-                    .padding(.horizontal, 22)
-                    .padding(.top, 20)
-
-                HStack {
-                    Text("Ruck & Run").font(.system(size: 15, weight: .heavy))
-                    Spacer()
-                    Text("A DadHabit.dad app").font(.system(size: 12, weight: .semibold)).opacity(0.6)
-                }
-                .foregroundStyle(.white)
-                .padding(.horizontal, 22)
-                .padding(.vertical, 16)
-
-                Rectangle().fill(.orange).frame(height: 5)
+                ShareFooter()
             }
         }
         .frame(width: ShareCard.size.width, height: ShareCard.size.height)
     }
+}
 
-    private func stat(_ value: String, _ label: String) -> some View {
+/// "Just the run" card — no score, no recovery details.
+struct BasicShareCardView: View {
+    let activity: Activity
+    let map: UIImage?
+
+    var body: some View {
+        ZStack(alignment: .top) {
+            Color.black
+            if let map {
+                Image(uiImage: map).resizable().frame(width: 360, height: 430)
+            }
+            LinearGradient(stops: [.init(color: .black.opacity(0.05), location: 0),
+                                   .init(color: .black.opacity(0.2), location: 0.4),
+                                   .init(color: .black, location: 0.7)],
+                           startPoint: .top, endPoint: .bottom)
+
+            VStack(spacing: 0) {
+                Rectangle().fill(.orange).frame(height: 5)
+                HStack {
+                    Label(activity.type.title.uppercased(), systemImage: activity.type.symbol)
+                        .font(.system(size: 13, weight: .heavy))
+                        .tracking(1.5)
+                    Spacer()
+                    Text(activity.start.formatted(.dateTime.month(.abbreviated).day().year()))
+                        .font(.system(size: 13, weight: .semibold))
+                }
+                .foregroundStyle(.white.opacity(0.9))
+                .padding(.horizontal, 22)
+                .padding(.top, 16)
+
+                Spacer(minLength: 0)
+
+                VStack(spacing: 0) {
+                    Text(Format.miles(activity.distanceMeters))
+                        .font(.system(size: 96, weight: .heavy, design: .rounded))
+                        .minimumScaleFactor(0.6)
+                        .lineLimit(1)
+                    Text("MILES")
+                        .font(.system(size: 14, weight: .heavy))
+                        .tracking(4)
+                        .opacity(0.7)
+                }
+                .foregroundStyle(.white)
+
+                HStack(spacing: 0) {
+                    ShareStat(value: Format.duration(activity.movingSeconds), label: "TIME")
+                    ShareStat(value: Format.pace(distanceMeters: activity.distanceMeters, seconds: activity.movingSeconds), label: "PACE /MI")
+                    if let lbs = activity.ruckWeightLbs {
+                        ShareStat(value: "\(Int(lbs))", label: "LB RUCK")
+                    } else {
+                        ShareStat(value: "\(Int((activity.elevationGainMeters * Format.feetPerMeter).rounded()))", label: "FT CLIMB")
+                    }
+                }
+                .padding(.top, 26)
+                .padding(.horizontal, 14)
+
+                ShareFooter()
+            }
+        }
+        .frame(width: ShareCard.size.width, height: ShareCard.size.height)
+    }
+}
+
+struct ShareStat: View {
+    let value: String
+    let label: String
+
+    var body: some View {
         VStack(spacing: 3) {
             Text(value)
                 .font(.system(size: 22, weight: .bold, design: .rounded))
@@ -172,21 +241,60 @@ struct ShareCardView: View {
     }
 }
 
+struct ShareFooter: View {
+    var body: some View {
+        VStack(spacing: 0) {
+            Rectangle().fill(.white.opacity(0.18)).frame(height: 1)
+                .padding(.horizontal, 22)
+                .padding(.top, 20)
+            HStack {
+                Text("Ruck & Run").font(.system(size: 15, weight: .heavy))
+                Spacer()
+                Text("A DadHabit.dad app").font(.system(size: 12, weight: .semibold)).opacity(0.6)
+            }
+            .foregroundStyle(.white)
+            .padding(.horizontal, 22)
+            .padding(.vertical, 16)
+            Rectangle().fill(.orange).frame(height: 5)
+        }
+    }
+}
+
 /// Preview of the card with the system share sheet (Instagram, Messages, Save Image, …).
 struct ShareSheet: View {
-    let image: UIImage
+    enum Style: String, CaseIterable, Identifiable {
+        case detailed = "Full story"
+        case basic = "Just the run"
+        var id: String { rawValue }
+    }
+
+    let images: ShareCard.Images
     let title: String
     @Environment(\.dismiss) private var dismiss
+    @AppStorage("shareStyle") private var style: Style = .detailed
+
+    private var image: UIImage {
+        style == .detailed ? (images.detailed ?? images.basic) : images.basic
+    }
 
     var body: some View {
         NavigationStack {
-            VStack(spacing: 20) {
+            VStack(spacing: 18) {
+                if images.detailed != nil {
+                    Picker("Style", selection: $style) {
+                        ForEach(Style.allCases) { Text($0.rawValue).tag($0) }
+                    }
+                    .pickerStyle(.segmented)
+                    .padding(.horizontal, 36)
+                }
+
                 Image(uiImage: image)
                     .resizable()
                     .scaledToFit()
                     .clipShape(RoundedRectangle(cornerRadius: 18, style: .continuous))
                     .shadow(color: .black.opacity(0.25), radius: 16, y: 6)
-                    .padding(.horizontal, 36)
+                    .padding(.horizontal, 44)
+                    .animation(.snappy, value: style)
 
                 ShareLink(item: Image(uiImage: image), preview: SharePreview(title, image: Image(uiImage: image))) {
                     Label("Share", systemImage: "square.and.arrow.up")

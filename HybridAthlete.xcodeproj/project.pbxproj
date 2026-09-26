@@ -11,13 +11,18 @@
 		14ADCCB469B06B7F8D27A4F6 /* ActivityChartsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6316400ADF04F92540322131 /* ActivityChartsTests.swift */; };
 		2020AA5BCF301BE126DDA624 /* HealthKitManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F22B3BA9543F8D9C0082120A /* HealthKitManager.swift */; };
 		2F68747104EF17FC0F27D1F4 /* Theme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6CA7EC4BC8B890D162417B9B /* Theme.swift */; };
+		3E210ACD6E7AC5148D51A921 /* Announcer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 103DFE27A1592EFF2696634D /* Announcer.swift */; };
 		4B550AEBBA5848FAE02E8604 /* DetailScreenshotUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC1897C7E5C6E771F5A14003 /* DetailScreenshotUITests.swift */; };
 		5422BFD8E322A6CA29BF44EE /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC4D8A57E79F6F3B7000BD96 /* HomeView.swift */; };
+		57060604B8B36839E5A6452E /* RunActivityAttributes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7311550671541CA28DC81783 /* RunActivityAttributes.swift */; };
 		5FAD55985BF002AF00824D81 /* ActivityRecorder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63FDDC9D13E78675A9750660 /* ActivityRecorder.swift */; };
+		6144527EB06CEF1CA29642C4 /* Format.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EF715DAB365D89A3B3C5A9C /* Format.swift */; };
 		6338813615383283AF7F7E6D /* ActivityDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 80870564E02268F8173F8780 /* ActivityDetailView.swift */; };
 		7170D5915C34A3154BA9905B /* FlowUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6C3070F7F109B3ECA28CBAB /* FlowUITests.swift */; };
 		72AFFD721C47DE9C9810F7FC /* DifficultyEngineTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 271651D29E458413D55B43D7 /* DifficultyEngineTests.swift */; };
+		7688D47B1E810D3F737FB10F /* RuckRunWidgetsBundle.swift in Sources */ = {isa = PBXBuildFile; fileRef = D34876FDF4DE9E1909DA813F /* RuckRunWidgetsBundle.swift */; };
 		820621B9B9FB0FBCF5D7F1E0 /* ShareCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0242D5F69F79B34FCB69D7C5 /* ShareCard.swift */; };
+		8B9601D1F5AD1B64ED5E7E02 /* RunActivityAttributes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7311550671541CA28DC81783 /* RunActivityAttributes.swift */; };
 		9E7057A18B35CD080075060D /* HybridAthleteApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6CB45D5DBECEEE1FDB31FD81 /* HybridAthleteApp.swift */; };
 		AA1830ADF00562118458F5CA /* Format.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EF715DAB365D89A3B3C5A9C /* Format.swift */; };
 		AA40DD84BF8506DE85BBA80B /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 702AA756BEB0BDC0E1748CD3 /* Assets.xcassets */; };
@@ -25,7 +30,10 @@
 		BDEAAC1A3962B1A18E497E50 /* RecordingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BF7B37E04D083C82371067C /* RecordingView.swift */; };
 		C135A10CB08633802BA8DB62 /* ActivityCharts.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BAE23CC76410CFC6A1877C7 /* ActivityCharts.swift */; };
 		C21FA92467A8F82AB1E91A31 /* ActivityChartViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD3BECC6CAEF0188E52CE1D8 /* ActivityChartViews.swift */; };
+		F41CB012B7E14413D9E72BDF /* RuckRunWidgets.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = DF7121F74B8DA2AD34EC657D /* RuckRunWidgets.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		F51CBAC5ED19B32DCF4E2B1B /* NotesSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5ADBFDB79CBAD5BB08EB4327 /* NotesSheet.swift */; };
 		F5E65283910DF563FB833E85 /* DifficultyEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 646922885D9E5B101B05FCC8 /* DifficultyEngine.swift */; };
+		F7FE127404FD9F931923568D /* RunLiveActivity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17EC75B3F25A7C7D2D2EC189 /* RunLiveActivity.swift */; };
 		FCFFA42371D01243BB72E8A6 /* DemoData.swift in Sources */ = {isa = PBXBuildFile; fileRef = D63F9A3FE3C8EDF8DECA78F2 /* DemoData.swift */; };
 /* End PBXBuildFile section */
 
@@ -44,16 +52,41 @@
 			remoteGlobalIDString = 9D72C3628ECAD71EAC405F83;
 			remoteInfo = HybridAthlete;
 		};
+		C508A912835FCEBAD21CA03A /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = FEEA58DFE330C8CC7BD5B800 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = A08BEA6636EE526C22DCBBE1;
+			remoteInfo = RuckRunWidgets;
+		};
 /* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		20E9BBE7762A2F5BBD35123F /* Embed Foundation Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				F41CB012B7E14413D9E72BDF /* RuckRunWidgets.appex in Embed Foundation Extensions */,
+			);
+			name = "Embed Foundation Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		0242D5F69F79B34FCB69D7C5 /* ShareCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareCard.swift; sourceTree = "<group>"; };
+		103DFE27A1592EFF2696634D /* Announcer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Announcer.swift; sourceTree = "<group>"; };
+		17EC75B3F25A7C7D2D2EC189 /* RunLiveActivity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RunLiveActivity.swift; sourceTree = "<group>"; };
 		271651D29E458413D55B43D7 /* DifficultyEngineTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DifficultyEngineTests.swift; sourceTree = "<group>"; };
 		2EF715DAB365D89A3B3C5A9C /* Format.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Format.swift; sourceTree = "<group>"; };
 		327886D4BEFF0E215357CF36 /* HybridAthleteTests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = HybridAthleteTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		36CE2C492C85B86A700DC0E5 /* ActivityStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityStore.swift; sourceTree = "<group>"; };
 		3C468341F4EBCE96A2798BA1 /* HybridAthleteUITests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = HybridAthleteUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		5ADBFDB79CBAD5BB08EB4327 /* NotesSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotesSheet.swift; sourceTree = "<group>"; };
 		5BE05F1C631C21E85F131DBE /* HybridAthlete.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = HybridAthlete.entitlements; sourceTree = "<group>"; };
+		5D8FC18E1290DD19F0DFA6E0 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		6316400ADF04F92540322131 /* ActivityChartsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityChartsTests.swift; sourceTree = "<group>"; };
 		63FDDC9D13E78675A9750660 /* ActivityRecorder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityRecorder.swift; sourceTree = "<group>"; };
 		646922885D9E5B101B05FCC8 /* DifficultyEngine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DifficultyEngine.swift; sourceTree = "<group>"; };
@@ -62,6 +95,7 @@
 		6D9E57BC0F7634E7B0060EC6 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		6E52BF8C6E7FC3A1257ACF87 /* HybridAthlete.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = HybridAthlete.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		702AA756BEB0BDC0E1748CD3 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		7311550671541CA28DC81783 /* RunActivityAttributes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RunActivityAttributes.swift; sourceTree = "<group>"; };
 		7BF7B37E04D083C82371067C /* RecordingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecordingView.swift; sourceTree = "<group>"; };
 		80870564E02268F8173F8780 /* ActivityDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityDetailView.swift; sourceTree = "<group>"; };
 		9BAE23CC76410CFC6A1877C7 /* ActivityCharts.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityCharts.swift; sourceTree = "<group>"; };
@@ -69,17 +103,28 @@
 		AC1897C7E5C6E771F5A14003 /* DetailScreenshotUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailScreenshotUITests.swift; sourceTree = "<group>"; };
 		AC4D8A57E79F6F3B7000BD96 /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
 		BD3BECC6CAEF0188E52CE1D8 /* ActivityChartViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityChartViews.swift; sourceTree = "<group>"; };
+		D34876FDF4DE9E1909DA813F /* RuckRunWidgetsBundle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RuckRunWidgetsBundle.swift; sourceTree = "<group>"; };
 		D63F9A3FE3C8EDF8DECA78F2 /* DemoData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DemoData.swift; sourceTree = "<group>"; };
+		DF7121F74B8DA2AD34EC657D /* RuckRunWidgets.appex */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = "wrapper.app-extension"; path = RuckRunWidgets.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		E6C3070F7F109B3ECA28CBAB /* FlowUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlowUITests.swift; sourceTree = "<group>"; };
 		F22B3BA9543F8D9C0082120A /* HealthKitManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HealthKitManager.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXGroup section */
+		07CFF6EBB1814DEF2CE43BF7 /* Shared */ = {
+			isa = PBXGroup;
+			children = (
+				7311550671541CA28DC81783 /* RunActivityAttributes.swift */,
+			);
+			path = Shared;
+			sourceTree = "<group>";
+		};
 		1F7F8BC5417B19A8BA6A1C40 /* HybridAthlete */ = {
 			isa = PBXGroup;
 			children = (
 				63FDDC9D13E78675A9750660 /* ActivityRecorder.swift */,
 				36CE2C492C85B86A700DC0E5 /* ActivityStore.swift */,
+				103DFE27A1592EFF2696634D /* Announcer.swift */,
 				702AA756BEB0BDC0E1748CD3 /* Assets.xcassets */,
 				D63F9A3FE3C8EDF8DECA78F2 /* DemoData.swift */,
 				F22B3BA9543F8D9C0082120A /* HealthKitManager.swift */,
@@ -98,8 +143,19 @@
 				6E52BF8C6E7FC3A1257ACF87 /* HybridAthlete.app */,
 				327886D4BEFF0E215357CF36 /* HybridAthleteTests.xctest */,
 				3C468341F4EBCE96A2798BA1 /* HybridAthleteUITests.xctest */,
+				DF7121F74B8DA2AD34EC657D /* RuckRunWidgets.appex */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		2AB38E16A0D7960B32118287 /* RuckRunWidgets */ = {
+			isa = PBXGroup;
+			children = (
+				5D8FC18E1290DD19F0DFA6E0 /* Info.plist */,
+				D34876FDF4DE9E1909DA813F /* RuckRunWidgetsBundle.swift */,
+				17EC75B3F25A7C7D2D2EC189 /* RunLiveActivity.swift */,
+			);
+			path = RuckRunWidgets;
 			sourceTree = "<group>";
 		};
 		77F619B46AA7E567ADEB11C3 /* Views */ = {
@@ -108,6 +164,7 @@
 				BD3BECC6CAEF0188E52CE1D8 /* ActivityChartViews.swift */,
 				80870564E02268F8173F8780 /* ActivityDetailView.swift */,
 				AC4D8A57E79F6F3B7000BD96 /* HomeView.swift */,
+				5ADBFDB79CBAD5BB08EB4327 /* NotesSheet.swift */,
 				7BF7B37E04D083C82371067C /* RecordingView.swift */,
 				0242D5F69F79B34FCB69D7C5 /* ShareCard.swift */,
 				6CA7EC4BC8B890D162417B9B /* Theme.swift */,
@@ -121,6 +178,8 @@
 				1F7F8BC5417B19A8BA6A1C40 /* HybridAthlete */,
 				A3B4BBE6924CD29A79616B43 /* HybridAthleteTests */,
 				EB72E1804DD6B345297FC5AE /* HybridAthleteUITests */,
+				2AB38E16A0D7960B32118287 /* RuckRunWidgets */,
+				07CFF6EBB1814DEF2CE43BF7 /* Shared */,
 				2399EB2D8663BAE971EA8D55 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -199,10 +258,12 @@
 			buildPhases = (
 				952CCEAE7BCCE9520DAB188E /* Sources */,
 				B68F800AF0CA518A8C83D539 /* Resources */,
+				20E9BBE7762A2F5BBD35123F /* Embed Foundation Extensions */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				0DDD0AF29495F909E8F4FDB0 /* PBXTargetDependency */,
 			);
 			name = HybridAthlete;
 			packageProductDependencies = (
@@ -210,6 +271,23 @@
 			productName = HybridAthlete;
 			productReference = 6E52BF8C6E7FC3A1257ACF87 /* HybridAthlete.app */;
 			productType = "com.apple.product-type.application";
+		};
+		A08BEA6636EE526C22DCBBE1 /* RuckRunWidgets */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = AE8BA6CB46541598FD523690 /* Build configuration list for PBXNativeTarget "RuckRunWidgets" */;
+			buildPhases = (
+				085A0B564E8FBA8E648738C8 /* Sources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = RuckRunWidgets;
+			packageProductDependencies = (
+			);
+			productName = RuckRunWidgets;
+			productReference = DF7121F74B8DA2AD34EC657D /* RuckRunWidgets.appex */;
+			productType = "com.apple.product-type.app-extension";
 		};
 /* End PBXNativeTarget section */
 
@@ -222,12 +300,18 @@
 				TargetAttributes = {
 					499F1C9A49FA6E0A38B1D05C = {
 						DevelopmentTeam = 6TMKWLMV2K;
+						ProvisioningStyle = Automatic;
 					};
 					558EE98581A81404B60CC913 = {
 						DevelopmentTeam = 6TMKWLMV2K;
+						ProvisioningStyle = Automatic;
 						TestTargetID = 9D72C3628ECAD71EAC405F83;
 					};
 					9D72C3628ECAD71EAC405F83 = {
+						DevelopmentTeam = 6TMKWLMV2K;
+						ProvisioningStyle = Automatic;
+					};
+					A08BEA6636EE526C22DCBBE1 = {
 						DevelopmentTeam = 6TMKWLMV2K;
 						ProvisioningStyle = Automatic;
 					};
@@ -248,6 +332,7 @@
 			projectRoot = "";
 			targets = (
 				9D72C3628ECAD71EAC405F83 /* HybridAthlete */,
+				A08BEA6636EE526C22DCBBE1 /* RuckRunWidgets */,
 				499F1C9A49FA6E0A38B1D05C /* HybridAthleteTests */,
 				558EE98581A81404B60CC913 /* HybridAthleteUITests */,
 			);
@@ -266,6 +351,17 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		085A0B564E8FBA8E648738C8 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				6144527EB06CEF1CA29642C4 /* Format.swift in Sources */,
+				7688D47B1E810D3F737FB10F /* RuckRunWidgetsBundle.swift in Sources */,
+				57060604B8B36839E5A6452E /* RunActivityAttributes.swift in Sources */,
+				F7FE127404FD9F931923568D /* RunLiveActivity.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		358B66194C00A22B3B5A1D4F /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -294,13 +390,16 @@
 				6338813615383283AF7F7E6D /* ActivityDetailView.swift in Sources */,
 				5FAD55985BF002AF00824D81 /* ActivityRecorder.swift in Sources */,
 				04F193199C373E5D326585BD /* ActivityStore.swift in Sources */,
+				3E210ACD6E7AC5148D51A921 /* Announcer.swift in Sources */,
 				FCFFA42371D01243BB72E8A6 /* DemoData.swift in Sources */,
 				F5E65283910DF563FB833E85 /* DifficultyEngine.swift in Sources */,
 				AA1830ADF00562118458F5CA /* Format.swift in Sources */,
 				2020AA5BCF301BE126DDA624 /* HealthKitManager.swift in Sources */,
 				5422BFD8E322A6CA29BF44EE /* HomeView.swift in Sources */,
 				9E7057A18B35CD080075060D /* HybridAthleteApp.swift in Sources */,
+				F51CBAC5ED19B32DCF4E2B1B /* NotesSheet.swift in Sources */,
 				BDEAAC1A3962B1A18E497E50 /* RecordingView.swift in Sources */,
+				8B9601D1F5AD1B64ED5E7E02 /* RunActivityAttributes.swift in Sources */,
 				820621B9B9FB0FBCF5D7F1E0 /* ShareCard.swift in Sources */,
 				2F68747104EF17FC0F27D1F4 /* Theme.swift in Sources */,
 			);
@@ -309,6 +408,11 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		0DDD0AF29495F909E8F4FDB0 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = A08BEA6636EE526C22DCBBE1 /* RuckRunWidgets */;
+			targetProxy = C508A912835FCEBAD21CA03A /* PBXContainerItemProxy */;
+		};
 		4B21C6D5F49387163CC7346B /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 9D72C3628ECAD71EAC405F83 /* HybridAthlete */;
@@ -355,8 +459,11 @@
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_STYLE = Automatic;
 				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 17;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = 6TMKWLMV2K;
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
@@ -368,6 +475,7 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MARKETING_VERSION = 1.0.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -384,18 +492,13 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = HybridAthlete/HybridAthlete.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 16;
-				DEVELOPMENT_TEAM = 6TMKWLMV2K;
 				INFOPLIST_FILE = HybridAthlete/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.jwatsondev.simplerun;
 				SDKROOT = iphoneos;
-				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Release;
@@ -404,7 +507,6 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
-				DEVELOPMENT_TEAM = 6TMKWLMV2K;
 				GENERATE_INFOPLIST_FILE = YES;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -413,7 +515,6 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.jwatsondev.HybridAthleteUITests;
 				SDKROOT = iphoneos;
-				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				TEST_TARGET_NAME = HybridAthlete;
 			};
@@ -452,8 +553,11 @@
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_STYLE = Automatic;
 				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 17;
 				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = 6TMKWLMV2K;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
@@ -471,6 +575,7 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MARKETING_VERSION = 1.0.0;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -486,7 +591,6 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
-				DEVELOPMENT_TEAM = 6TMKWLMV2K;
 				GENERATE_INFOPLIST_FILE = YES;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -495,7 +599,6 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.jwatsondev.HybridAthleteUITests;
 				SDKROOT = iphoneos;
-				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				TEST_TARGET_NAME = HybridAthlete;
 			};
@@ -507,18 +610,13 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = HybridAthlete/HybridAthlete.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 16;
-				DEVELOPMENT_TEAM = 6TMKWLMV2K;
 				INFOPLIST_FILE = HybridAthlete/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.jwatsondev.simplerun;
 				SDKROOT = iphoneos;
-				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Debug;
@@ -527,7 +625,6 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
-				DEVELOPMENT_TEAM = 6TMKWLMV2K;
 				GENERATE_INFOPLIST_FILE = YES;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -536,17 +633,45 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.jwatsondev.HybridAthleteTests;
 				SDKROOT = iphoneos;
-				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/HybridAthlete.app/HybridAthlete";
 			};
 			name = Debug;
 		};
+		EDBBDE84238A99B0F41A336F /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				INFOPLIST_FILE = RuckRunWidgets/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.jwatsondev.simplerun.widgets;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Debug;
+		};
+		EED77F8D61AE344604AB95B9 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				INFOPLIST_FILE = RuckRunWidgets/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.jwatsondev.simplerun.widgets;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Release;
+		};
 		FA3E566B6221E722C2429642 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
-				DEVELOPMENT_TEAM = 6TMKWLMV2K;
 				GENERATE_INFOPLIST_FILE = YES;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -555,7 +680,6 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.jwatsondev.HybridAthleteTests;
 				SDKROOT = iphoneos;
-				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/HybridAthlete.app/HybridAthlete";
 			};
@@ -587,6 +711,15 @@
 			buildConfigurations = (
 				D0B42441749396CAF4ED8554 /* Debug */,
 				2522CC27B5C06803BE9ACC77 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		AE8BA6CB46541598FD523690 /* Build configuration list for PBXNativeTarget "RuckRunWidgets" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				EDBBDE84238A99B0F41A336F /* Debug */,
+				EED77F8D61AE344604AB95B9 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Debug;

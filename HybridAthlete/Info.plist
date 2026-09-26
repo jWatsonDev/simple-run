@@ -30,9 +30,12 @@
 	<string>Ruck &amp; Run uses your location to track distance, pace and route during a run, walk or ruck, including while your screen is locked.</string>
 	<key>NSMotionUsageDescription</key>
 	<string>Ruck &amp; Run uses the barometer to measure how much you climbed.</string>
+	<key>NSSupportsLiveActivities</key>
+	<true/>
 	<key>UIBackgroundModes</key>
 	<array>
 		<string>location</string>
+		<string>audio</string>
 	</array>
 	<key>UILaunchScreen</key>
 	<dict/>
