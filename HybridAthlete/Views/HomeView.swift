@@ -94,6 +94,12 @@ struct HomeView: View {
     }
 
     private func loadToday() async {
+        #if DEBUG
+        if ProcessInfo.processInfo.arguments.contains("-demoActivity") {
+            today = DemoData.today
+            return
+        }
+        #endif
         today = await health.recoveryContext(before: Date())
     }
 }

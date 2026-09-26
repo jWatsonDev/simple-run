@@ -49,7 +49,49 @@ enum DemoData {
                                      hrv: 33, typicalHRV: 46, drinksLogged: nil)
         a.difficulty = DifficultyEngine.evaluate(a)
         a.savedToHealth = true
+        a.notesPromptDismissed = true
         return a
     }
+
+    /// A believable week: today's run plus a ruck, a walk and an easy run.
+    static func history(now: Date = Date()) -> [Activity] {
+        let day = 86400.0
+        var ruck = run(endingAt: now.addingTimeInterval(-2 * day - 3 * 3600))
+        ruck.id = UUID()
+        ruck.type = .ruck
+        ruck.ruckWeightLbs = 35
+        ruck.movingSeconds = 62 * 60
+        ruck.distanceMeters = 3.6 * Format.metersPerMile
+        ruck.recovery = RecoveryContext(sleepHours: 7.6, typicalSleepHours: 7.1, restingHR: 57, typicalRestingHR: 58,
+                                        hrv: 49, typicalHRV: 46, drinksLogged: nil)
+        ruck.heartRateSamples = ruck.heartRateSamples?.map { HRSample(date: $0.date, bpm: $0.bpm - 22) }
+        ruck.heartRate = HeartRateSummary(average: 139, max: 152, sampleCount: ruck.heartRateSamples?.count ?? 0)
+        ruck.difficulty = DifficultyEngine.evaluate(ruck)
+
+        var walk = run(endingAt: now.addingTimeInterval(-4 * day - 5 * 3600))
+        walk.id = UUID()
+        walk.type = .walk
+        walk.movingSeconds = 41 * 60
+        walk.distanceMeters = 2.3 * Format.metersPerMile
+        walk.heartRateSamples = nil
+        walk.heartRate = nil
+        walk.recovery = nil
+        walk.difficulty = DifficultyEngine.evaluate(walk)
+
+        var easy = run(endingAt: now.addingTimeInterval(-6 * day - 2 * 3600))
+        easy.id = UUID()
+        easy.movingSeconds = 29 * 60 + 40
+        easy.distanceMeters = 3.1 * Format.metersPerMile
+        easy.heartRateSamples = easy.heartRateSamples?.map { HRSample(date: $0.date, bpm: $0.bpm - 17) }
+        easy.heartRate = HeartRateSummary(average: 144, max: 158, sampleCount: easy.heartRateSamples?.count ?? 0)
+        easy.recovery = RecoveryContext(sleepHours: 7.8, typicalSleepHours: 7.1, restingHR: 56, typicalRestingHR: 58,
+                                        hrv: 52, typicalHRV: 46, drinksLogged: nil)
+        easy.difficulty = DifficultyEngine.evaluate(easy)
+
+        return [run(endingAt: now), ruck, walk, easy]
+    }
+
+    static let today = RecoveryContext(sleepHours: 7.4, typicalSleepHours: 7.1, restingHR: 56, typicalRestingHR: 58,
+                                       hrv: 51, typicalHRV: 46, drinksLogged: nil)
 }
 #endif

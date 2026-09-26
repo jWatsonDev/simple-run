@@ -24,6 +24,7 @@
 		820621B9B9FB0FBCF5D7F1E0 /* ShareCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0242D5F69F79B34FCB69D7C5 /* ShareCard.swift */; };
 		8B9601D1F5AD1B64ED5E7E02 /* RunActivityAttributes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7311550671541CA28DC81783 /* RunActivityAttributes.swift */; };
 		9E7057A18B35CD080075060D /* HybridAthleteApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6CB45D5DBECEEE1FDB31FD81 /* HybridAthleteApp.swift */; };
+		A411AD098F43426994DC499F /* AppStoreScreenshotsUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC7C939E9943E59A41224808 /* AppStoreScreenshotsUITests.swift */; };
 		AA1830ADF00562118458F5CA /* Format.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EF715DAB365D89A3B3C5A9C /* Format.swift */; };
 		AA40DD84BF8506DE85BBA80B /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 702AA756BEB0BDC0E1748CD3 /* Assets.xcassets */; };
 		BBC775AB0DDDB7B0810B5A6A /* Activity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9FAF2765B802EBD97B87B924 /* Activity.swift */; };
@@ -108,6 +109,7 @@
 		DF7121F74B8DA2AD34EC657D /* RuckRunWidgets.appex */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = "wrapper.app-extension"; path = RuckRunWidgets.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		E6C3070F7F109B3ECA28CBAB /* FlowUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlowUITests.swift; sourceTree = "<group>"; };
 		F22B3BA9543F8D9C0082120A /* HealthKitManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HealthKitManager.swift; sourceTree = "<group>"; };
+		FC7C939E9943E59A41224808 /* AppStoreScreenshotsUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppStoreScreenshotsUITests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXGroup section */
@@ -207,6 +209,7 @@
 		EB72E1804DD6B345297FC5AE /* HybridAthleteUITests */ = {
 			isa = PBXGroup;
 			children = (
+				FC7C939E9943E59A41224808 /* AppStoreScreenshotsUITests.swift */,
 				AC1897C7E5C6E771F5A14003 /* DetailScreenshotUITests.swift */,
 				E6C3070F7F109B3ECA28CBAB /* FlowUITests.swift */,
 			);
@@ -375,6 +378,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A411AD098F43426994DC499F /* AppStoreScreenshotsUITests.swift in Sources */,
 				4B550AEBBA5848FAE02E8604 /* DetailScreenshotUITests.swift in Sources */,
 				7170D5915C34A3154BA9905B /* FlowUITests.swift in Sources */,
 			);

@@ -17,7 +17,7 @@ final class ActivityStore: ObservableObject {
         }
         #if DEBUG
         if ProcessInfo.processInfo.arguments.contains("-demoActivity") {
-            activities = [DemoData.run()]
+            activities = DemoData.history()
         }
         #endif
     }
