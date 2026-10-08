@@ -46,6 +46,24 @@ Build number must be higher than the last uploaded build (see RELEASES on rn-arc
 
 ---
 
+## Workflow
+
+Used by the `/spec`, `/slices`, `/build-slice`, and `/ship` skills.
+
+- **Specs dir:** `docs/specs/` (note: `docs/` is also GitHub Pages; specs are harmless there, but don't link them)
+- **Layers:** Model / engine (`HybridAthlete/Models/`) → View (`HybridAthlete/Views/`) → system integrations (HealthKit, location, Live Activity in `RuckRunWidgets/`)
+- **Setup:** `xcodegen generate` (after any `project.yml` change)
+- **Test:** `xcodebuild test -scheme HybridAthlete -destination 'platform=iOS Simulator,name=iPhone 17 Pro' -only-testing:HybridAthleteTests -quiet` (add `HybridAthleteUITests` for UI flows)
+- **Build:** `xcodebuild build -scheme HybridAthlete -destination 'generic/platform=iOS Simulator' -quiet`
+- **Verify UI:** run in the Simulator with `-demoActivity` for realistic data and screenshot it
+- **Ship:** `./scripts/ship.sh <build_number>` (TestFlight upload)
+- **Ship notes:**
+  - The build number must be higher than the last upload. Check `CURRENT_PROJECT_VERSION` in `project.yml` and the `build-*` git tags.
+  - Tag `build-N` and push after uploading.
+  - New HealthKit types, background modes, or data collection → update the privacy page in `docs/` and the App Privacy answers in App Store Connect (web UI, Jay).
+
+---
+
 ## Watch Out For
 
 - Apple scrutinizes background location and HealthKit — usage descriptions and reviewer notes must justify both
